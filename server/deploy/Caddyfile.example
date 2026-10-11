@@ -1,0 +1,6 @@
+# Alan adını DNS'te sunucuya yönlendirdikten sonra. Caddy HTTPS sertifikasını kendisi alır.
+# sarıkedi.com IDN olduğu için punycode biçimini (xn--...) kullan.
+example.com {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3001
+}

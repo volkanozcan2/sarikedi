@@ -1,0 +1,753 @@
+{
+  "id": "top-sektirme",
+  "title": "Top sektirme (Pong)",
+  "description": "Fareyle raketi yönet, topu düşürmeden sektir ve puan topla.",
+  "level": "orta",
+  "cover": null,
+  "order": 22,
+  "published": true,
+  "startProject": "/uploads/bos-proje.sb3",
+  "steps": [
+    {
+      "text": "Klasik Pong oyunu yapacağız! \"Kukla Seç\" ile önce \"Ball\" (top), sonra \"Paddle\" (raket) kuklalarını ekle. Cool Cat bu oyunda gerekmiyor: istersen çöp kutusuyla silebilirsin. Kuklaların adını değiştirme!",
+      "media": null,
+      "hint": "İki kukla da kukla kütüphanesinde var.",
+      "checks": [],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "ui",
+            "id": "addSprite"
+          },
+          "label": "Kukla ekle"
+        }
+      ]
+    },
+    {
+      "text": "Raketi seç. \"Yeşil bayrağa tıklandığında\" altına \"x: 0 y: -150 konumuna git\"; sonra sürekli tekrarla: \"x konumunu (farenin x i) yap\" ki raket fareyle birlikte hareket etsin.",
+      "media": null,
+      "hint": "Farenin x i Algılama kategorisindeki yuvarlak bir bloktur; \"x konumunu … yap\" bloğunun kutusuna bırak.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "motion_gotoxy",
+              "fields": {},
+              "inputs": {
+                "X": {
+                  "literal": {
+                    "any": true
+                  }
+                },
+                "Y": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "control_forever",
+                "fields": {},
+                "inputs": {
+                  "SUBSTACK": {
+                    "opcode": "motion_setx",
+                    "fields": {},
+                    "inputs": {
+                      "X": {
+                        "opcode": "sensing_mousex",
+                        "fields": {},
+                        "inputs": {},
+                        "next": null
+                      }
+                    },
+                    "next": null
+                  }
+                },
+                "next": null
+              }
+            }
+          },
+          "sprite": "Paddle"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "sensing"
+          },
+          "label": "Algılama"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "motion_setx"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Şimdi topu seç. Yeşil bayrakta \"x: 0 y: 0 konumuna git\", \"45 yönüne dön\", sonra sürekli tekrarla: \"6 adım git\" ve \"kenara geldiyse sek\".",
+      "media": null,
+      "hint": "\"Kenara geldiyse sek\" bloğu Hareket kategorisinin altlarında; top duvarlardan sekecek.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "motion_gotoxy",
+              "fields": {},
+              "inputs": {
+                "X": {
+                  "literal": {
+                    "any": true
+                  }
+                },
+                "Y": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "motion_pointindirection",
+                "fields": {},
+                "inputs": {
+                  "DIRECTION": {
+                    "literal": {
+                      "any": true
+                    }
+                  }
+                },
+                "next": {
+                  "opcode": "control_forever",
+                  "fields": {},
+                  "inputs": {
+                    "SUBSTACK": {
+                      "opcode": "motion_movesteps",
+                      "fields": {},
+                      "inputs": {
+                        "STEPS": {
+                          "literal": {
+                            "any": true
+                          }
+                        }
+                      },
+                      "next": {
+                        "opcode": "motion_ifonedgebounce",
+                        "fields": {},
+                        "inputs": {},
+                        "next": null
+                      }
+                    }
+                  },
+                  "next": null
+                }
+              }
+            }
+          },
+          "sprite": "Ball"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "motion"
+          },
+          "label": "Hareket"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "motion_ifonedgebounce"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Top rakete çarpınca yukarı sekmeli. Döngüye \"eğer … ise\" ekle: koşul \"Paddle e değiyor mu?\", içine \"(180 - yön) yönüne dön\" ve \"10 adım git\".",
+      "media": null,
+      "hint": "Çıkarma bloğu Operatörler'de, \"yön\" Hareket kategorisinde. Soldaki kutuya 180 yaz. Yeni bloğu betiğin EN ALTINA, son bloğun altına tak; ortaya bırakırsan altındaki bloklar onun içine girer.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "motion_gotoxy",
+              "fields": {},
+              "inputs": {
+                "X": {
+                  "literal": {
+                    "any": true
+                  }
+                },
+                "Y": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "motion_pointindirection",
+                "fields": {},
+                "inputs": {
+                  "DIRECTION": {
+                    "literal": {
+                      "any": true
+                    }
+                  }
+                },
+                "next": {
+                  "opcode": "control_forever",
+                  "fields": {},
+                  "inputs": {
+                    "SUBSTACK": {
+                      "opcode": "motion_movesteps",
+                      "fields": {},
+                      "inputs": {
+                        "STEPS": {
+                          "literal": {
+                            "any": true
+                          }
+                        }
+                      },
+                      "next": {
+                        "opcode": "motion_ifonedgebounce",
+                        "fields": {},
+                        "inputs": {},
+                        "next": {
+                          "opcode": "control_if",
+                          "fields": {},
+                          "inputs": {
+                            "CONDITION": {
+                              "opcode": "sensing_touchingobject",
+                              "fields": {},
+                              "inputs": {
+                                "TOUCHINGOBJECTMENU": {
+                                  "literal": "Paddle"
+                                }
+                              },
+                              "next": null
+                            },
+                            "SUBSTACK": {
+                              "opcode": "motion_pointindirection",
+                              "fields": {},
+                              "inputs": {
+                                "DIRECTION": {
+                                  "opcode": "operator_subtract",
+                                  "fields": {},
+                                  "inputs": {
+                                    "NUM1": {
+                                      "literal": "180"
+                                    },
+                                    "NUM2": {
+                                      "opcode": "motion_direction",
+                                      "fields": {},
+                                      "inputs": {},
+                                      "next": null
+                                    }
+                                  },
+                                  "next": null
+                                }
+                              },
+                              "next": {
+                                "opcode": "motion_movesteps",
+                                "fields": {},
+                                "inputs": {
+                                  "STEPS": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  }
+                                },
+                                "next": null
+                              }
+                            }
+                          },
+                          "next": null
+                        }
+                      }
+                    }
+                  },
+                  "next": null
+                }
+              }
+            }
+          },
+          "sprite": "Ball"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "operators"
+          },
+          "label": "Operatörler"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "control_if"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Topu kaçırırsan oyun bitsin! Döngüye bir \"eğer … ise\" daha ekle: koşul \"y konumu < -150\", içine \"2 saniye boyunca Kaçırdın! de\" ve \"durdur (tümü)\".",
+      "media": null,
+      "hint": "Raket y = -150'de duruyor; top ondan daha aşağı inerse kaçırmışsındır. Yeni bloğu betiğin EN ALTINA, son bloğun altına tak; ortaya bırakırsan altındaki bloklar onun içine girer.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "motion_gotoxy",
+              "fields": {},
+              "inputs": {
+                "X": {
+                  "literal": {
+                    "any": true
+                  }
+                },
+                "Y": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "motion_pointindirection",
+                "fields": {},
+                "inputs": {
+                  "DIRECTION": {
+                    "literal": {
+                      "any": true
+                    }
+                  }
+                },
+                "next": {
+                  "opcode": "control_forever",
+                  "fields": {},
+                  "inputs": {
+                    "SUBSTACK": {
+                      "opcode": "motion_movesteps",
+                      "fields": {},
+                      "inputs": {
+                        "STEPS": {
+                          "literal": {
+                            "any": true
+                          }
+                        }
+                      },
+                      "next": {
+                        "opcode": "motion_ifonedgebounce",
+                        "fields": {},
+                        "inputs": {},
+                        "next": {
+                          "opcode": "control_if",
+                          "fields": {},
+                          "inputs": {
+                            "CONDITION": {
+                              "opcode": "sensing_touchingobject",
+                              "fields": {},
+                              "inputs": {
+                                "TOUCHINGOBJECTMENU": {
+                                  "literal": "Paddle"
+                                }
+                              },
+                              "next": null
+                            },
+                            "SUBSTACK": {
+                              "opcode": "motion_pointindirection",
+                              "fields": {},
+                              "inputs": {
+                                "DIRECTION": {
+                                  "opcode": "operator_subtract",
+                                  "fields": {},
+                                  "inputs": {
+                                    "NUM1": {
+                                      "literal": "180"
+                                    },
+                                    "NUM2": {
+                                      "opcode": "motion_direction",
+                                      "fields": {},
+                                      "inputs": {},
+                                      "next": null
+                                    }
+                                  },
+                                  "next": null
+                                }
+                              },
+                              "next": {
+                                "opcode": "motion_movesteps",
+                                "fields": {},
+                                "inputs": {
+                                  "STEPS": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  }
+                                },
+                                "next": null
+                              }
+                            }
+                          },
+                          "next": {
+                            "opcode": "control_if",
+                            "fields": {},
+                            "inputs": {
+                              "CONDITION": {
+                                "opcode": "operator_lt",
+                                "fields": {},
+                                "inputs": {
+                                  "OPERAND1": {
+                                    "opcode": "motion_yposition",
+                                    "fields": {},
+                                    "inputs": {},
+                                    "next": null
+                                  },
+                                  "OPERAND2": {
+                                    "literal": "-150"
+                                  }
+                                },
+                                "next": null
+                              },
+                              "SUBSTACK": {
+                                "opcode": "looks_sayforsecs",
+                                "fields": {},
+                                "inputs": {
+                                  "MESSAGE": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  },
+                                  "SECS": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  }
+                                },
+                                "next": {
+                                  "opcode": "control_stop",
+                                  "fields": {
+                                    "STOP_OPTION": "all"
+                                  },
+                                  "inputs": {},
+                                  "next": null
+                                }
+                              }
+                            },
+                            "next": null
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "next": null
+                }
+              }
+            }
+          },
+          "sprite": "Ball"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "control"
+          },
+          "label": "Kontrol"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "control_if"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Puan tutmak için \"skor\" adında bir değişken oluştur: Değişkenler kategorisinde \"Değişken oluştur\", adı skor.",
+      "media": null,
+      "hint": "Adı küçük harflerle ve tam olarak \"skor\" yaz. \"Tüm kuklalar için\" seçeneği seçili kalsın.",
+      "checks": [],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "variables"
+          },
+          "label": "Değişkenler"
+        }
+      ]
+    },
+    {
+      "text": "Her başarılı vuruşta 1 puan! Topun yeşil bayrak betiğinde \"x: 0 y: 0\" öncesine \"skor değişkenini 0 yap\" koy; raketle çarpışma bloğunun sonuna da \"skor i 1 kadar değiştir\" ekle.",
+      "media": null,
+      "hint": "Skoru başta sıfırla, sonra her çarpışmada 1 artır.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "data_setvariableto",
+              "fields": {
+                "VARIABLE": "skor"
+              },
+              "inputs": {
+                "VALUE": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "motion_gotoxy",
+                "fields": {},
+                "inputs": {
+                  "X": {
+                    "literal": {
+                      "any": true
+                    }
+                  },
+                  "Y": {
+                    "literal": {
+                      "any": true
+                    }
+                  }
+                },
+                "next": {
+                  "opcode": "motion_pointindirection",
+                  "fields": {},
+                  "inputs": {
+                    "DIRECTION": {
+                      "literal": {
+                        "any": true
+                      }
+                    }
+                  },
+                  "next": {
+                    "opcode": "control_forever",
+                    "fields": {},
+                    "inputs": {
+                      "SUBSTACK": {
+                        "opcode": "motion_movesteps",
+                        "fields": {},
+                        "inputs": {
+                          "STEPS": {
+                            "literal": {
+                              "any": true
+                            }
+                          }
+                        },
+                        "next": {
+                          "opcode": "motion_ifonedgebounce",
+                          "fields": {},
+                          "inputs": {},
+                          "next": {
+                            "opcode": "control_if",
+                            "fields": {},
+                            "inputs": {
+                              "CONDITION": {
+                                "opcode": "sensing_touchingobject",
+                                "fields": {},
+                                "inputs": {
+                                  "TOUCHINGOBJECTMENU": {
+                                    "literal": "Paddle"
+                                  }
+                                },
+                                "next": null
+                              },
+                              "SUBSTACK": {
+                                "opcode": "motion_pointindirection",
+                                "fields": {},
+                                "inputs": {
+                                  "DIRECTION": {
+                                    "opcode": "operator_subtract",
+                                    "fields": {},
+                                    "inputs": {
+                                      "NUM1": {
+                                        "literal": "180"
+                                      },
+                                      "NUM2": {
+                                        "opcode": "motion_direction",
+                                        "fields": {},
+                                        "inputs": {},
+                                        "next": null
+                                      }
+                                    },
+                                    "next": null
+                                  }
+                                },
+                                "next": {
+                                  "opcode": "motion_movesteps",
+                                  "fields": {},
+                                  "inputs": {
+                                    "STEPS": {
+                                      "literal": {
+                                        "any": true
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "opcode": "data_changevariableby",
+                                    "fields": {
+                                      "VARIABLE": "skor"
+                                    },
+                                    "inputs": {
+                                      "VALUE": {
+                                        "literal": {
+                                          "any": true
+                                        }
+                                      }
+                                    },
+                                    "next": null
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "opcode": "control_if",
+                              "fields": {},
+                              "inputs": {
+                                "CONDITION": {
+                                  "opcode": "operator_lt",
+                                  "fields": {},
+                                  "inputs": {
+                                    "OPERAND1": {
+                                      "opcode": "motion_yposition",
+                                      "fields": {},
+                                      "inputs": {},
+                                      "next": null
+                                    },
+                                    "OPERAND2": {
+                                      "literal": "-150"
+                                    }
+                                  },
+                                  "next": null
+                                },
+                                "SUBSTACK": {
+                                  "opcode": "looks_sayforsecs",
+                                  "fields": {},
+                                  "inputs": {
+                                    "MESSAGE": {
+                                      "literal": {
+                                        "any": true
+                                      }
+                                    },
+                                    "SECS": {
+                                      "literal": {
+                                        "any": true
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "opcode": "control_stop",
+                                    "fields": {
+                                      "STOP_OPTION": "all"
+                                    },
+                                    "inputs": {},
+                                    "next": null
+                                  }
+                                }
+                              },
+                              "next": null
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "next": null
+                  }
+                }
+              }
+            }
+          },
+          "sprite": "Ball"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "variables"
+          },
+          "label": "Değişkenler"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "data_changevariableby"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Oyun hazır! Yeşil bayrağa tıkla, raketi fareyle yönet ve en yüksek skoru yapmaya çalış. Zorlaştırmak için topun \"6 adım git\" bloğundaki sayıyı büyüt!",
+      "media": null,
+      "hint": "Top ne kadar hızlıysa o kadar zor olur; 8 ya da 10 dene.",
+      "checks": [],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "ui",
+            "id": "greenFlag"
+          },
+          "label": "Oyunu başlat"
+        }
+      ]
+    }
+  ]
+}

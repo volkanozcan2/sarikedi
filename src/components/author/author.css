@@ -1,0 +1,233 @@
+@import "../../css/colors.css";
+@import "../../css/z-index.css";
+
+/* menü çubuğunun (491) üstünde, yükleme/modal katmanlarının (500+) altında */
+$z-author: 495;
+/* kayıt çubuğu kukla/dekor kütüphanesi pencerelerinin (510) de üstünde görünür */
+$z-record-bar: 600;
+
+.author-toggle {
+    position: fixed;
+    top: 0.6rem;
+    right: 0.75rem;
+    z-index: $z-author;
+    background: $ui-white;
+    color: $text-primary;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.author-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 30rem;
+    max-width: 100vw;
+    z-index: $z-author;
+    display: flex;
+    flex-direction: column;
+    background: $ui-white;
+    border-left: 3px solid $looks-secondary;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.2);
+    color: $text-primary;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.85rem;
+}
+
+.author-header {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: $looks-secondary;
+    color: $ui-white;
+    font-weight: bold;
+}
+
+.author-header-title {
+    flex-grow: 1;
+}
+
+.author-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0.75rem;
+}
+
+.section {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid $ui-tertiary;
+}
+
+.section-title {
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.field {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.field > span {
+    display: block;
+    margin-bottom: 0.15rem;
+    font-weight: bold;
+}
+
+.input, .select, .textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.3rem 0.4rem;
+    border: 1px solid $ui-tertiary;
+    border-radius: 0.3rem;
+    font-size: 0.85rem;
+    font-family: inherit;
+}
+
+.textarea {
+    min-height: 5rem;
+    resize: vertical;
+}
+
+.button {
+    border: 1px solid $ui-tertiary;
+    background: $ui-white;
+    border-radius: 0.4rem;
+    padding: 0.3rem 0.6rem;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: $text-primary;
+    cursor: pointer;
+}
+
+.button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.button.primary {
+    background: $looks-secondary;
+    border-color: $looks-secondary;
+    color: $ui-white;
+}
+
+.button.danger {
+    color: #c0392b;
+}
+
+.error {
+    margin: 0.4rem 0;
+    padding: 0.4rem 0.6rem;
+    background: #fdecea;
+    color: #c0392b;
+    border-radius: 0.3rem;
+}
+
+.message {
+    margin: 0.4rem 0;
+    padding: 0.4rem 0.6rem;
+    background: #e8f6ee;
+    color: #1e8449;
+    border-radius: 0.3rem;
+}
+
+.warning {
+    margin: 0.4rem 0;
+    padding: 0.4rem 0.6rem;
+    background: #fff4e0;
+    color: #a86400;
+    border-radius: 0.3rem;
+}
+
+.muted {
+    color: $text-primary-transparent;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table td, .table th {
+    padding: 0.3rem;
+    border-bottom: 1px solid $ui-tertiary;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.step-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.step-tab.active {
+    background: $looks-secondary;
+    color: $ui-white;
+}
+
+.check-box {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid $ui-tertiary;
+    border-radius: 0.4rem;
+    background: rgba(133, 92, 214, 0.04);
+}
+
+.record-bar {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: $z-record-bar;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    background: $ui-white;
+    border: 2px solid $looks-secondary;
+    border-radius: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    color: $text-primary;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.8rem;
+    max-width: calc(100vw - 1rem);
+}
+
+.record-handle {
+    cursor: move;
+    user-select: none;
+    font-weight: bold;
+    white-space: nowrap;
+    padding: 0 0.25rem;
+}
+
+.record-dot {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: #e74c3c;
+}
+
+.record-status {
+    max-width: 14rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #1e8449;
+}

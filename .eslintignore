@@ -1,0 +1,9 @@
+/node_modules/
+/build/
+/dist/
+/test/
+/src/examples/
+/server/node_modules/
+/server/data/
+/server/src/lib/
+/lessons/

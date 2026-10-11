@@ -1,0 +1,860 @@
+{
+  "id": "yildiz-yakala",
+  "title": "Uzayda yıldız yakala",
+  "description": "Kediyi ok tuşlarıyla yönlendir, gökten düşen yıldızları yakala ve skorunu artır.",
+  "level": "baslangic",
+  "cover": null,
+  "order": 10,
+  "published": true,
+  "startProject": "/uploads/bos-proje.sb3",
+  "steps": [
+    {
+      "text": "Uzayda yıldız toplama oyunu yapacağız! Önce sahneyi uzaya çevirelim: sağ alttaki \"Dekor Seç\" düğmesine tıkla ve \"Stars\" (yıldızlar) dekorunu seç.",
+      "media": null,
+      "hint": "Dekor Seç düğmesi sağ altta, sahnenin altındaki dekor bölümündedir.",
+      "checks": [],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "ui",
+            "id": "stage"
+          },
+          "label": "Sahne burada"
+        }
+      ]
+    },
+    {
+      "text": "Şimdi toplayacağımız yıldızı ekleyelim. Sol alttaki \"Kukla Seç\" düğmesine tıkla ve \"Star\" (yıldız) kuklasını seç. Kuklaların adını değiştirme!",
+      "media": null,
+      "hint": "Mavi daire şeklindeki düğme, kukla listesinin hemen yanındadır.",
+      "checks": [],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "ui",
+            "id": "addSprite"
+          },
+          "label": "Kukla ekle"
+        }
+      ]
+    },
+    {
+      "text": "Kediyi sağa yürütelim. Kukla listesinden \"Cool Cat\"i seç. Olaylar kategorisinden \"… tuşuna basılınca\" bloğunu çalışma alanına sürükle ve menüden \"sağ ok\"u seç. Altına Hareket kategorisinden \"x konumunu 10 değiştir\" bloğunu tak.",
+      "media": null,
+      "hint": "Sarı blok Olaylar, mavi blok Hareket kategorisindedir. Menüyü açmak için bloktaki oka tıkla.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenkeypressed",
+            "fields": {
+              "KEY_OPTION": "right arrow"
+            },
+            "inputs": {},
+            "next": {
+              "opcode": "motion_changexby",
+              "fields": {},
+              "inputs": {
+                "DX": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": null
+            }
+          },
+          "sprite": "Cool Cat"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "events"
+          },
+          "label": "Olaylar"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "event_whenkeypressed"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Şimdi sola yürüsün: yeni bir \"… tuşuna basılınca\" bloğu al, menüden \"sol ok\"u seç ve altına \"x konumunu -10 değiştir\" bloğunu tak (eksi işaretini unutma!).",
+      "media": null,
+      "hint": "Değer kutusuna -10 yaz. Eksi, kediyi sola götürür.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenkeypressed",
+            "fields": {
+              "KEY_OPTION": "left arrow"
+            },
+            "inputs": {},
+            "next": {
+              "opcode": "motion_changexby",
+              "fields": {},
+              "inputs": {
+                "DX": {
+                  "literal": "-10"
+                }
+              },
+              "next": null
+            }
+          },
+          "sprite": "Cool Cat"
+        }
+      ],
+      "guide": [
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "event_whenkeypressed"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Bir tane daha"
+        }
+      ]
+    },
+    {
+      "text": "Skoru tutacak bir değişken yapalım. Değişkenler kategorisine gel, \"Değişken oluştur\" de, adına skor yaz ve Tamam'a bas.",
+      "media": null,
+      "hint": "Adı tam olarak \"skor\" yaz (küçük harflerle), çünkü blokları ona göre kontrol edeceğiz. \"Tüm kuklalar için\" seçeneği seçili kalsın.",
+      "checks": [],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "variables"
+          },
+          "label": "Değişkenler"
+        }
+      ]
+    },
+    {
+      "text": "Kukla listesinden yıldızı seç. \"Yeşil bayrağa tıklandığında\" bloğunun altına \"skor değişkenini 0 yap\" ve \"x: 0 y: 180 konumuna git\" bloklarını tak: yıldız ekranın tepesinden başlasın.",
+      "media": null,
+      "hint": "Değişken bloğunun menüsünden skor'u seç. Önce Olaylar'dan yeşil bayrak, sonra Değişkenler ve Hareket kategorilerinden bloklar.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "data_setvariableto",
+              "fields": {
+                "VARIABLE": "skor"
+              },
+              "inputs": {
+                "VALUE": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "motion_gotoxy",
+                "fields": {},
+                "inputs": {
+                  "X": {
+                    "literal": {
+                      "any": true
+                    }
+                  },
+                  "Y": {
+                    "literal": {
+                      "any": true
+                    }
+                  }
+                },
+                "next": null
+              }
+            }
+          },
+          "sprite": "Star"
+        },
+        {
+          "type": "outcome",
+          "trigger": "flag",
+          "waitMs": 400,
+          "expect": [
+            {
+              "target": "stage",
+              "prop": "variable:skor",
+              "op": "eq",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "events"
+          },
+          "label": "Olaylar"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "event_whenflagclicked"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Yıldız aşağı düşsün! Betiğinin sonuna Kontrol kategorisinden \"sürekli tekrarla\" bloğunu ekle ve içine \"y konumunu -5 değiştir\" bloğunu koy.",
+      "media": null,
+      "hint": "Eksi değer yıldızı aşağı indirir. Blokların hepsi aynı betiğe bağlı olmalı. Yeni bloğu betiğin EN ALTINA, son bloğun altına tak; ortaya bırakırsan altındaki bloklar onun içine girer.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "data_setvariableto",
+              "fields": {
+                "VARIABLE": "skor"
+              },
+              "inputs": {
+                "VALUE": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "motion_gotoxy",
+                "fields": {},
+                "inputs": {
+                  "X": {
+                    "literal": {
+                      "any": true
+                    }
+                  },
+                  "Y": {
+                    "literal": {
+                      "any": true
+                    }
+                  }
+                },
+                "next": {
+                  "opcode": "control_forever",
+                  "fields": {},
+                  "inputs": {
+                    "SUBSTACK": {
+                      "opcode": "motion_changeyby",
+                      "fields": {},
+                      "inputs": {
+                        "DY": {
+                          "literal": "-5"
+                        }
+                      },
+                      "next": null
+                    }
+                  },
+                  "next": null
+                }
+              }
+            }
+          },
+          "sprite": "Star"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "control"
+          },
+          "label": "Kontrol"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "control_forever"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Yıldız ekranın altına inince yeniden tepeye çıksın. \"sürekli tekrarla\"nın içine, y konumunu değiştir bloğunun altına \"eğer … ise\" bloğu koy. Koşul: \"y konumu < -170\". İçine: \"x: (-200 ile 200 arasında rastgele bir sayı) y: 180 konumuna git\".",
+      "media": null,
+      "hint": "y konumu, Hareket kategorisinin en altındaki yuvarlak bloktur. Rastgele sayı bloğu Operatörler'de. Yeni bloğu betiğin EN ALTINA, son bloğun altına tak; ortaya bırakırsan altındaki bloklar onun içine girer.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "data_setvariableto",
+              "fields": {
+                "VARIABLE": "skor"
+              },
+              "inputs": {
+                "VALUE": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "motion_gotoxy",
+                "fields": {},
+                "inputs": {
+                  "X": {
+                    "literal": {
+                      "any": true
+                    }
+                  },
+                  "Y": {
+                    "literal": {
+                      "any": true
+                    }
+                  }
+                },
+                "next": {
+                  "opcode": "control_forever",
+                  "fields": {},
+                  "inputs": {
+                    "SUBSTACK": {
+                      "opcode": "motion_changeyby",
+                      "fields": {},
+                      "inputs": {
+                        "DY": {
+                          "literal": "-5"
+                        }
+                      },
+                      "next": {
+                        "opcode": "control_if",
+                        "fields": {},
+                        "inputs": {
+                          "CONDITION": {
+                            "opcode": "operator_lt",
+                            "fields": {},
+                            "inputs": {
+                              "OPERAND1": {
+                                "opcode": "motion_yposition",
+                                "fields": {},
+                                "inputs": {},
+                                "next": null
+                              },
+                              "OPERAND2": {
+                                "literal": "-170"
+                              }
+                            },
+                            "next": null
+                          },
+                          "SUBSTACK": {
+                            "opcode": "motion_gotoxy",
+                            "fields": {},
+                            "inputs": {
+                              "X": {
+                                "opcode": "operator_random",
+                                "fields": {},
+                                "inputs": {
+                                  "FROM": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  },
+                                  "TO": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  }
+                                },
+                                "next": null
+                              },
+                              "Y": {
+                                "literal": {
+                                  "any": true
+                                }
+                              }
+                            },
+                            "next": null
+                          }
+                        },
+                        "next": null
+                      }
+                    }
+                  },
+                  "next": null
+                }
+              }
+            }
+          },
+          "sprite": "Star"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "control"
+          },
+          "label": "Kontrol"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "control_if"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Yıldızı yakalayınca puan kazan! Aynı döngüye bir \"eğer … ise\" bloğu daha ekle. Koşul: \"Cool Cat e değiyor mu?\". İçine: \"skor i 1 kadar değiştir\" ve yıldızı yeniden tepeye gönderen \"x: (rastgele) y: 180 konumuna git\" bloğu.",
+      "media": null,
+      "hint": "\"… e değiyor mu?\" bloğu Algılama kategorisinde. Menüden Cool Cat'i seç (fare imleci değil!). Yeni bloğu betiğin EN ALTINA, son bloğun altına tak; ortaya bırakırsan altındaki bloklar onun içine girer.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "data_setvariableto",
+              "fields": {
+                "VARIABLE": "skor"
+              },
+              "inputs": {
+                "VALUE": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "motion_gotoxy",
+                "fields": {},
+                "inputs": {
+                  "X": {
+                    "literal": {
+                      "any": true
+                    }
+                  },
+                  "Y": {
+                    "literal": {
+                      "any": true
+                    }
+                  }
+                },
+                "next": {
+                  "opcode": "control_forever",
+                  "fields": {},
+                  "inputs": {
+                    "SUBSTACK": {
+                      "opcode": "motion_changeyby",
+                      "fields": {},
+                      "inputs": {
+                        "DY": {
+                          "literal": "-5"
+                        }
+                      },
+                      "next": {
+                        "opcode": "control_if",
+                        "fields": {},
+                        "inputs": {
+                          "CONDITION": {
+                            "opcode": "operator_lt",
+                            "fields": {},
+                            "inputs": {
+                              "OPERAND1": {
+                                "opcode": "motion_yposition",
+                                "fields": {},
+                                "inputs": {},
+                                "next": null
+                              },
+                              "OPERAND2": {
+                                "literal": "-170"
+                              }
+                            },
+                            "next": null
+                          },
+                          "SUBSTACK": {
+                            "opcode": "motion_gotoxy",
+                            "fields": {},
+                            "inputs": {
+                              "X": {
+                                "opcode": "operator_random",
+                                "fields": {},
+                                "inputs": {
+                                  "FROM": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  },
+                                  "TO": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  }
+                                },
+                                "next": null
+                              },
+                              "Y": {
+                                "literal": {
+                                  "any": true
+                                }
+                              }
+                            },
+                            "next": null
+                          }
+                        },
+                        "next": {
+                          "opcode": "control_if",
+                          "fields": {},
+                          "inputs": {
+                            "CONDITION": {
+                              "opcode": "sensing_touchingobject",
+                              "fields": {},
+                              "inputs": {
+                                "TOUCHINGOBJECTMENU": {
+                                  "literal": "Cool Cat"
+                                }
+                              },
+                              "next": null
+                            },
+                            "SUBSTACK": {
+                              "opcode": "data_changevariableby",
+                              "fields": {
+                                "VARIABLE": "skor"
+                              },
+                              "inputs": {
+                                "VALUE": {
+                                  "literal": {
+                                    "any": true
+                                  }
+                                }
+                              },
+                              "next": {
+                                "opcode": "motion_gotoxy",
+                                "fields": {},
+                                "inputs": {
+                                  "X": {
+                                    "opcode": "operator_random",
+                                    "fields": {},
+                                    "inputs": {
+                                      "FROM": {
+                                        "literal": {
+                                          "any": true
+                                        }
+                                      },
+                                      "TO": {
+                                        "literal": {
+                                          "any": true
+                                        }
+                                      }
+                                    },
+                                    "next": null
+                                  },
+                                  "Y": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  }
+                                },
+                                "next": null
+                              }
+                            }
+                          },
+                          "next": null
+                        }
+                      }
+                    }
+                  },
+                  "next": null
+                }
+              }
+            }
+          },
+          "sprite": "Star"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "sensing"
+          },
+          "label": "Algılama"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "control_if"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Yakalayınca ses duyalım! Yakalama bloğunun içinin en sonuna Ses kategorisinden \"… sesini başlat\" bloğunu ekle ve menüden \"collect\" sesini seç.",
+      "media": null,
+      "hint": "Yıldız kuklasının sesi \"collect\"; menüde bu adı görürsün.",
+      "checks": [
+        {
+          "type": "blocks",
+          "pattern": {
+            "opcode": "event_whenflagclicked",
+            "fields": {},
+            "inputs": {},
+            "next": {
+              "opcode": "data_setvariableto",
+              "fields": {
+                "VARIABLE": "skor"
+              },
+              "inputs": {
+                "VALUE": {
+                  "literal": {
+                    "any": true
+                  }
+                }
+              },
+              "next": {
+                "opcode": "motion_gotoxy",
+                "fields": {},
+                "inputs": {
+                  "X": {
+                    "literal": {
+                      "any": true
+                    }
+                  },
+                  "Y": {
+                    "literal": {
+                      "any": true
+                    }
+                  }
+                },
+                "next": {
+                  "opcode": "control_forever",
+                  "fields": {},
+                  "inputs": {
+                    "SUBSTACK": {
+                      "opcode": "motion_changeyby",
+                      "fields": {},
+                      "inputs": {
+                        "DY": {
+                          "literal": "-5"
+                        }
+                      },
+                      "next": {
+                        "opcode": "control_if",
+                        "fields": {},
+                        "inputs": {
+                          "CONDITION": {
+                            "opcode": "operator_lt",
+                            "fields": {},
+                            "inputs": {
+                              "OPERAND1": {
+                                "opcode": "motion_yposition",
+                                "fields": {},
+                                "inputs": {},
+                                "next": null
+                              },
+                              "OPERAND2": {
+                                "literal": "-170"
+                              }
+                            },
+                            "next": null
+                          },
+                          "SUBSTACK": {
+                            "opcode": "motion_gotoxy",
+                            "fields": {},
+                            "inputs": {
+                              "X": {
+                                "opcode": "operator_random",
+                                "fields": {},
+                                "inputs": {
+                                  "FROM": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  },
+                                  "TO": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  }
+                                },
+                                "next": null
+                              },
+                              "Y": {
+                                "literal": {
+                                  "any": true
+                                }
+                              }
+                            },
+                            "next": null
+                          }
+                        },
+                        "next": {
+                          "opcode": "control_if",
+                          "fields": {},
+                          "inputs": {
+                            "CONDITION": {
+                              "opcode": "sensing_touchingobject",
+                              "fields": {},
+                              "inputs": {
+                                "TOUCHINGOBJECTMENU": {
+                                  "literal": "Cool Cat"
+                                }
+                              },
+                              "next": null
+                            },
+                            "SUBSTACK": {
+                              "opcode": "data_changevariableby",
+                              "fields": {
+                                "VARIABLE": "skor"
+                              },
+                              "inputs": {
+                                "VALUE": {
+                                  "literal": {
+                                    "any": true
+                                  }
+                                }
+                              },
+                              "next": {
+                                "opcode": "motion_gotoxy",
+                                "fields": {},
+                                "inputs": {
+                                  "X": {
+                                    "opcode": "operator_random",
+                                    "fields": {},
+                                    "inputs": {
+                                      "FROM": {
+                                        "literal": {
+                                          "any": true
+                                        }
+                                      },
+                                      "TO": {
+                                        "literal": {
+                                          "any": true
+                                        }
+                                      }
+                                    },
+                                    "next": null
+                                  },
+                                  "Y": {
+                                    "literal": {
+                                      "any": true
+                                    }
+                                  }
+                                },
+                                "next": {
+                                  "opcode": "sound_play",
+                                  "fields": {},
+                                  "inputs": {
+                                    "SOUND_MENU": {
+                                      "literal": {
+                                        "any": true
+                                      }
+                                    }
+                                  },
+                                  "next": null
+                                }
+                              }
+                            }
+                          },
+                          "next": null
+                        }
+                      }
+                    }
+                  },
+                  "next": null
+                }
+              }
+            }
+          },
+          "sprite": "Star"
+        }
+      ],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "category",
+            "id": "sound"
+          },
+          "label": "Ses"
+        },
+        {
+          "type": "drag",
+          "from": {
+            "kind": "block",
+            "opcode": "sound_play"
+          },
+          "to": {
+            "kind": "workspace"
+          },
+          "label": "Sürükle"
+        }
+      ]
+    },
+    {
+      "text": "Oyun hazır! Yeşil bayrağa tıkla, ok tuşlarıyla kediyi yönlendir ve yıldızları yakala. Merak ediyorsan \"y konumunu -5 değiştir\" yerine -8 yaz ve yıldızı hızlandır!",
+      "media": null,
+      "hint": "Sayıyı büyüttükçe yıldız daha hızlı düşer.",
+      "checks": [],
+      "guide": [
+        {
+          "type": "click",
+          "target": {
+            "kind": "ui",
+            "id": "greenFlag"
+          },
+          "label": "Oyunu başlat"
+        }
+      ]
+    }
+  ]
+}

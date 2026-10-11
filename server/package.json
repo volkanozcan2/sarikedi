@@ -1,0 +1,21 @@
+{
+    "name": "sarikedi-server",
+    "version": "1.0.0",
+    "private": true,
+    "description": "SARIKEDİ ders API'si ve statik sunucu",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "hash-password": "node scripts/hash-password.js",
+        "build:shared": "node scripts/build-shared.js",
+        "reseed": "node scripts/reseed.js"
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "dependencies": {
+        "better-sqlite3": "11.10.0",
+        "compression": "1.8.0",
+        "express": "4.21.2"
+    }
+}
