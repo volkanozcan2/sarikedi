@@ -4,7 +4,7 @@ import {createCats, stepCat} from '../../lib/cat-swarm';
 import catImage from '../../lib/default-project/209ff3921b8c5a171d514caf15630301.png';
 import styles from './about-modal.css';
 
-const CAT_COUNT = 28;
+const CAT_COUNT = 84;
 const MAX_FRAME_SECONDS = 0.05;
 
 /**

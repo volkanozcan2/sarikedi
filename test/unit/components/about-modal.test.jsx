@@ -26,7 +26,7 @@ describe('AboutModalComponent', () => {
 
     test('GitHub bağlantısı yeni sekmede güvenli açılır', () => {
         const link = shallow(<AboutModalComponent onRequestClose={jest.fn()} />).find('a');
-        expect(link.prop('href')).toBe('https://github.com/volkanozcan2');
+        expect(link.prop('href')).toBe('https://github.com/volkanozcan2/sarikedi');
         expect(link.prop('target')).toBe('_blank');
         expect(link.prop('rel')).toBe('noopener noreferrer');
     });

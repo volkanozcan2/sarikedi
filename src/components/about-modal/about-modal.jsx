@@ -57,11 +57,11 @@ class AboutModalComponent extends React.Component {
                     <p className={styles.small}>
                         {'Kodlar burada: '}
                         <a
-                            href="https://github.com/volkanozcan2"
+                            href="https://github.com/volkanozcan2/sarikedi"
                             rel="noopener noreferrer"
                             target="_blank"
                         >
-                            {'github.com/volkanozcan2'}
+                            {'github.com/volkanozcan2/sarikedi'}
                         </a>
                     </p>
                 </div>
