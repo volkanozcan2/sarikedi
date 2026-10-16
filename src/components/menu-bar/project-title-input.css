@@ -12,7 +12,9 @@ can set a width for example or what it should do in a flex box (eg. grow).
     border-radius: $form-radius;
     -webkit-border-radius: $form-radius;
     -moz-border-radius: $form-radius;
-    background-color: $ui-white-transparent;
+    background-color: $ui-white;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
     background-clip: padding-box;
     -webkit-background-clip: padding-box;
     height: auto;
@@ -20,27 +22,27 @@ can set a width for example or what it should do in a flex box (eg. grow).
 }
 
 .title-field {
-    color: $ui-white;
+    color: $nb-ink;
     font-weight: bold;
     font-size: .8rem;
 }
 
 .title-field::placeholder {
-    color: $ui-white;
+    color: $text-primary-transparent;
     font-weight: normal;
     font-size: .8rem;
     font-style: italic;
 }
 
 .title-field:hover {
-    background-color: hsla(0, 100%, 100%, 0.5);
+    background-color: $nb-paper;
 }
 
 .title-field:focus {
     outline:none;
-    border: 1px solid $ui-transparent;
-    -webkit-box-shadow: 0 0 0 calc($space * .5) $ui-white-transparent;
-    box-shadow: 0 0 0 calc($space * .5) $ui-white-transparent;
+    border: 3px solid $nb-ink;
+    -webkit-box-shadow: 4px 4px 0 $nb-pink;
+    box-shadow: 4px 4px 0 $nb-pink;
     background-color: $ui-white;
     color: $text-primary;
 }

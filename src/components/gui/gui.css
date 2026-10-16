@@ -9,6 +9,8 @@
 .body-wrapper {
     height: calc(100% - $menu-bar-height);
     background-color: $ui-primary;
+    background-image: radial-gradient($nb-dot 2px, transparent 2.5px);
+    background-size: 28px 28px;
 }
 
 .body-wrapper * {
@@ -54,34 +56,42 @@
 }
 
 .tab-list {
-    height: $stage-menu-height;
-    width: 250px; /* Match width of the toolbox */
+    height: calc($stage-menu-height + 0.75rem);
+    min-width: 250px; /* en az araç kutusu kadar geniş */
     display: flex;
-    align-items: flex-end;
+    /* haplar boşluğun dikey ortasında (gölge payı için altta 3px) */
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.25rem 5px;
     flex-shrink: 0;
 
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 500;
-    font-size: 0.80rem;
+    font-family: $font-body;
+    font-weight: 700;
+    font-size: 0.9rem;
 
     /* Overrides for react-tabs styling */
     margin: 0 !important;
     border-bottom: 0 !important;
 }
 
+/* Hap (pill) biçimli sekmeler */
 .tab {
-    flex-grow: 1;
-    height: 80%;
-    margin-bottom: 0;
+    position: relative;
+    flex: 0 0 auto;
+    height: 2.25rem;
+    margin: 0;
 
-    border-radius: 1rem 1rem 0 0;
-    border: 1px solid $ui-black-transparent;
+    border-radius: 999px;
+    border: 3px solid $nb-ink;
+    box-shadow: 3px 3px 0 $nb-ink;
 
-    padding: 0.125rem 1.25rem 0;
-    font-size: 0.75rem;
+    padding: 0 1rem;
+    font-size: 0.9rem;
 
-    background-color: $ui-tertiary;
-    color: $text-primary-transparent;
+    background-color: $ui-white;
+    color: $nb-ink;
+    cursor: pointer;
+    transition: background-color 0.08s linear, translate 0.08s linear, box-shadow 0.08s linear;
 
     display: flex;
     justify-content: center;
@@ -91,47 +101,26 @@
     white-space: nowrap;
 }
 
-[dir="ltr"] .tab {
-    margin-left: -0.5rem;
-}
-
-[dir="rtl"] .tab {
-    margin-right: -0.5rem;
-}
-
-[dir="ltr"] .tab:nth-of-type(1) {
-    margin-left: 0;
-}
-
-[dir="rtl"] .tab:nth-of-type(1) {
-    margin-right: 0;
-}
-
-/* Use z-indices to force left-on-top for tabs */
-.tab:nth-of-type(1) {
-    z-index: 3;
-}
-.tab:nth-of-type(2) {
-    z-index: 2;
-}
-.tab:nth-of-type(3) {
-    z-index: 1;
-}
-
 .tab:hover {
-  background-color: $ui-primary;
+    background-color: $nb-pink;
+    translate: -1px -1px;
+    box-shadow: 4px 4px 0 $nb-ink;
+}
+
+.tab:active {
+    background-color: $nb-cyan;
+    translate: 3px 3px;
+    box-shadow: 0 0 0 $nb-ink;
 }
 
 .tab.is-selected {
-    height: 90%;
-    color: $looks-secondary;
-    background-color: $ui-white;
-    z-index: 4; /* Make sure selected is always above */
+    color: $nb-ink;
+    background-color: $nb-yellow;
 }
 
 .tab img {
     width: 1.375rem;
-    filter: grayscale(100%);
+    filter: $nb-ink-filter;
 }
 
 [dir="ltr"] .tab img {
@@ -152,7 +141,7 @@
 }
 
 .tab.is-selected img {
-    filter: none;
+    filter: $nb-ink-filter;
 }
 
 /* Tab style overrides from react-tabs */
@@ -163,7 +152,7 @@
 .tab.is-selected:focus {
     outline: none;
     box-shadow: none;
-    border-color: $ui-black-transparent;
+    border-color: $nb-ink;
 }
 
 .tab.is-selected:focus:after {
@@ -205,8 +194,8 @@
     display: flex;
     flex-direction: column;
     /* pad entire wrapper to the left and right; allow children to fill width */
-    padding-left: $space;
-    padding-right: $space;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
 
     /* this will only ever be as wide as the stage */
     flex-basis: 0;
@@ -217,7 +206,7 @@
     flex-grow: 1;
     flex-basis: 0;
 
-    padding-top: $space;
+    padding-top: 0.75rem;
     min-height: 0; /* this makes it work in Firefox */
 
     /*
@@ -229,17 +218,19 @@
 }
 
 .extension-button-container {
-    width: 3.75rem;
+    /* kategori sütunuyla aynı genişlik: 60px sütun + 3px sağ kenarlık; üst çizgiyi sütunun alt kenarlığı verir */
+    width: 63px;
     height: 3.25rem;
     position: absolute;
     bottom: 0;
     left: 0;
-    right: 0;
     z-index: $z-index-extension-button;
-    background: $looks-secondary;
+    background: $nb-lilac;
 
-    border: 1px solid $looks-secondary;
-    box-sizing: content-box; /* To match scratch-block vertical toolbox borders */
+    border: 3px solid $nb-ink;
+    border-left: 0;
+    border-top: 0;
+    box-sizing: border-box;
 }
 
 $fade-out-distance: 15px;
@@ -249,7 +240,7 @@ $fade-out-distance: 15px;
     position: absolute;
     top: calc(calc(-1 * $fade-out-distance) - 1px);
     left: -1px;
-    background: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));
+    background: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0));
     height: $fade-out-distance;
     width: calc(100% + 0.5px);
 }
@@ -262,9 +253,19 @@ $fade-out-distance: 15px;
     width: 100%;
     height: 100%;
     cursor: pointer;
+    transition: background-color 0.08s linear;
+}
+
+.extension-button:hover {
+    background-color: $nb-yellow;
+}
+
+.extension-button:active {
+    background-color: $nb-cyan;
 }
 
 .extension-button-icon {
+    filter: $nb-ink-filter;
     width: 1.75rem;
     height: 1.75rem;
 }

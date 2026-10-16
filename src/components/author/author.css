@@ -1,4 +1,5 @@
 @import "../../css/colors.css";
+@import "../../css/units.css";
 @import "../../css/z-index.css";
 
 /* menü çubuğunun (491) üstünde, yükleme/modal katmanlarının (500+) altında */
@@ -8,16 +9,23 @@ $z-record-bar: 600;
 
 .author-toggle {
     position: fixed;
-    top: 0.6rem;
-    right: 0.75rem;
+    top: 0.5rem;
+    right: 14rem;
     z-index: $z-author;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: $ui-white;
     color: $text-primary;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.4rem 0.8rem;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 3px 3px 0 $nb-shadow;
+    height: 2rem;
+    padding: 0 0.8rem;
     font-weight: bold;
     cursor: pointer;
+    font-family: $font-body;
+    font-size: 0.85rem;
 }
 
 .author-panel {
@@ -31,10 +39,10 @@ $z-record-bar: 600;
     display: flex;
     flex-direction: column;
     background: $ui-white;
-    border-left: 3px solid $looks-secondary;
-    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.2);
+    border-left: 4px solid $nb-ink;
+    box-shadow: -6px 0 0 $nb-shadow;
     color: $text-primary;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $font-body;
     font-size: 0.85rem;
 }
 
@@ -42,13 +50,16 @@ $z-record-bar: 600;
     display: flex;
     align-items: center;
     padding: 0.5rem 0.75rem;
-    background: $looks-secondary;
-    color: $ui-white;
+    background: $nb-yellow;
+    border-bottom: 3px solid $nb-ink;
+    color: $nb-ink;
     font-weight: bold;
 }
 
 .author-header-title {
     flex-grow: 1;
+    font-family: $font-heading;
+    text-transform: uppercase;
 }
 
 .author-body {
@@ -60,13 +71,14 @@ $z-record-bar: 600;
 .section {
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid $ui-tertiary;
+    border-bottom: 3px solid $nb-ink;
 }
 
 .section-title {
     margin: 0 0 0.5rem;
     font-size: 0.9rem;
     font-weight: bold;
+    font-family: $font-heading;
 }
 
 .row {
@@ -91,10 +103,16 @@ $z-record-bar: 600;
     width: 100%;
     box-sizing: border-box;
     padding: 0.3rem 0.4rem;
-    border: 1px solid $ui-tertiary;
-    border-radius: 0.3rem;
+    border: 2px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 2px 2px 0 $nb-shadow;
     font-size: 0.85rem;
     font-family: inherit;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+    outline: none;
+    box-shadow: 3px 3px 0 $nb-pink, 3px 3px 0 2px $nb-ink;
 }
 
 .textarea {
@@ -103,14 +121,28 @@ $z-record-bar: 600;
 }
 
 .button {
-    border: 1px solid $ui-tertiary;
+    border: 2px solid $nb-ink;
     background: $ui-white;
-    border-radius: 0.4rem;
+    border-radius: 0;
+    box-shadow: 2px 2px 0 $nb-shadow;
     padding: 0.3rem 0.6rem;
     font-weight: bold;
     font-size: 0.8rem;
     color: $text-primary;
     cursor: pointer;
+    transition: translate 0.08s linear, box-shadow 0.08s linear, background-color 0.08s linear;
+}
+
+.button:hover {
+    background: $nb-pink;
+    translate: -1px -1px;
+    box-shadow: 3px 3px 0 $nb-shadow;
+}
+
+.button:active {
+    background: $nb-cyan;
+    translate: 2px 2px;
+    box-shadow: none;
 }
 
 .button:disabled {
@@ -119,9 +151,9 @@ $z-record-bar: 600;
 }
 
 .button.primary {
-    background: $looks-secondary;
-    border-color: $looks-secondary;
-    color: $ui-white;
+    background: $nb-yellow;
+    border-color: $nb-ink;
+    color: $nb-ink;
 }
 
 .button.danger {
@@ -131,25 +163,28 @@ $z-record-bar: 600;
 .error {
     margin: 0.4rem 0;
     padding: 0.4rem 0.6rem;
-    background: #fdecea;
-    color: #c0392b;
-    border-radius: 0.3rem;
+    background: $nb-pink;
+    color: $nb-ink;
+    border: 2px solid $nb-ink;
+    border-radius: 0;
 }
 
 .message {
     margin: 0.4rem 0;
     padding: 0.4rem 0.6rem;
-    background: #e8f6ee;
-    color: #1e8449;
-    border-radius: 0.3rem;
+    background: $nb-green;
+    color: $nb-ink;
+    border: 2px solid $nb-ink;
+    border-radius: 0;
 }
 
 .warning {
     margin: 0.4rem 0;
     padding: 0.4rem 0.6rem;
-    background: #fff4e0;
-    color: #a86400;
-    border-radius: 0.3rem;
+    background: $nb-yellow;
+    color: $nb-ink;
+    border: 2px solid $nb-ink;
+    border-radius: 0;
 }
 
 .muted {
@@ -163,7 +198,7 @@ $z-record-bar: 600;
 
 .table td, .table th {
     padding: 0.3rem;
-    border-bottom: 1px solid $ui-tertiary;
+    border-bottom: 2px solid $nb-ink;
     text-align: left;
     vertical-align: middle;
 }
@@ -176,16 +211,16 @@ $z-record-bar: 600;
 }
 
 .step-tab.active {
-    background: $looks-secondary;
-    color: $ui-white;
+    background: $nb-yellow;
+    color: $nb-ink;
 }
 
 .check-box {
     margin-bottom: 0.5rem;
     padding: 0.5rem;
-    border: 1px solid $ui-tertiary;
-    border-radius: 0.4rem;
-    background: rgba(133, 92, 214, 0.04);
+    border: 2px solid $nb-ink;
+    border-radius: 0;
+    background: $nb-paper;
 }
 
 .record-bar {
@@ -199,11 +234,11 @@ $z-record-bar: 600;
     gap: 0.5rem;
     padding: 0.4rem 0.6rem;
     background: $ui-white;
-    border: 2px solid $looks-secondary;
-    border-radius: 2rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 5px 5px 0 $nb-shadow;
     color: $text-primary;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $font-body;
     font-size: 0.8rem;
     max-width: calc(100vw - 1rem);
 }

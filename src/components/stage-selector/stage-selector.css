@@ -10,13 +10,14 @@ $header-height: calc($stage-menu-height - 2px);
     align-items: center;
     position: relative; /* For the add backdrop button */
     flex-grow: 1;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $font-body;
+    font-weight: 700;
     background-color: $ui-white;
-    color: $text-primary;
-    border-top-left-radius: $space;
-    border-top-right-radius: $space;
-    border-color: $ui-black-transparent;
-    border-width: 1px;
+    color: $nb-ink;
+    box-shadow: 3px 3px 0 $nb-shadow;
+    border-radius: 0;
+    border-color: $nb-ink;
+    border-width: 3px;
     border-style: solid;
     border-bottom: 0;
     cursor: pointer;
@@ -24,14 +25,17 @@ $header-height: calc($stage-menu-height - 2px);
 }
 
 .stage-selector.is-selected {
-    border-top-left-radius: .625rem;
-    border-top-right-radius: .625rem;
-    border-color: $looks-secondary;
-    box-shadow: 0px 0px 0px 4px $looks-transparent;
+    background-color: $nb-pink;
+    box-shadow: 5px 5px 0 $nb-shadow;
 }
 
 .stage-selector:hover {
-    border-color: $looks-secondary;
+    /* renk değişmez; translate/transform da kullanma: içindeki ipuçlarının (position: fixed) konumunu bozar */
+    box-shadow: 4px 4px 0 $nb-shadow;
+}
+
+.stage-selector.is-selected:hover {
+    background-color: $nb-pink;
 }
 
 .header {
@@ -40,11 +44,10 @@ $header-height: calc($stage-menu-height - 2px);
     align-items: center;
     justify-content: center;
     height: $header-height;
-    background-color: white;
-    color: $text-primary;
-    border-top-left-radius: $space;
-    border-top-right-radius: $space;
-    border-bottom: 1px solid $ui-black-transparent;
+    background-color: transparent;
+    color: $nb-ink;
+    border-radius: 0;
+    border-bottom: 3px solid $nb-ink;
     width: 100%;
     transition: background-color 0.25s ease;
 }
@@ -60,11 +63,11 @@ $header-height: calc($stage-menu-height - 2px);
 }
 
 .stage-selector.is-selected .header {
-    background-color: $looks-secondary;
+    background-color: $nb-ink;
 }
 
 .stage-selector.is-selected .header-title {
-    color: $ui-white;
+    color: $nb-yellow;
 }
 
 .count {

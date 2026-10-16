@@ -10,6 +10,8 @@ import VM from 'scratch-vm';
 import getCostumeUrl from '../lib/get-costume-url';
 import DragRecognizer from '../lib/drag-recognizer';
 import {getEventXY} from '../lib/touch-utils';
+import {throwAway} from '../lib/throw-away';
+import {getUiSounds} from '../lib/ui-sounds';
 import DeleteConfirmationPrompt from '../components/delete-confirmation-prompt/delete-confirmation-prompt.jsx';
 
 import SpriteSelectorItemComponent from '../components/sprite-selector-item/sprite-selector-item.jsx';
@@ -32,7 +34,8 @@ class SpriteSelectorItem extends React.PureComponent {
             'handleTouchEnd',
             'handleDeleteButtonClick',
             'handleDeleteSpriteModalClose',
-            'handleDeleteSpriteModalConfirm'
+            'handleDeleteSpriteModalConfirm',
+            'throwOutCard'
         ]);
 
         this.dragRecognizer = new DragRecognizer({
@@ -116,13 +119,25 @@ class SpriteSelectorItem extends React.PureComponent {
         if (this.props.withDeleteConfirmation) {
             this.setState({isDeletePromptOpen: true});
         } else {
+            this.throwOutCard();
             this.props.onDeleteButtonClick(this.props.id);
         }
     }
     handleDeleteSpriteModalClose () {
         this.setState({isDeletePromptOpen: false});
     }
+    // Silinen kart, kopyası fırlatılıp düşürülerek yok olur (gerçek silme hemen yapılır)
+    throwOutCard () {
+        getUiSounds().play('delete'); // silme sesi fırlatma efektiyle birlikte çalar
+        // kukla listesinde ref sarmalayıcıdır (kart ilk çocuğu); kostüm/dekor/ses listelerinde ref kartın kendisidir
+        const ref = this.ref;
+        if (!ref) return;
+        const isCard = /sprite-selector-item_sprite-selector-item/.test(ref.className || '');
+        const card = isCard ? ref : ref.firstElementChild;
+        if (card) throwAway(card);
+    }
     handleDeleteSpriteModalConfirm () {
+        this.throwOutCard();
         this.props.onDeleteButtonClick(this.props.id);
         this.setState({isDeletePromptOpen: false});
     }

@@ -8,10 +8,12 @@
     margin: 2px 0 0; /* To keep the menu below the cursor comfortably */
     font-size: 0.85rem;
     text-align: left;
+    font-family: $font-body;
+    font-weight: 700;
     background-color: $ui-white;
-    border: 1px solid $ui-black-transparent;
-    border-radius: calc($space / 2);
-    box-shadow: 0px 0px 5px 1px $ui-black-transparent;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 5px 5px 0 $nb-shadow;
     pointer-events: none;
     transition: opacity 0.2s ease;
     z-index: $z-index-context-menu;
@@ -25,14 +27,14 @@
 }
 
 .menu-item:hover {
-    background: $looks-secondary;
-    color: white;
+    background: $nb-yellow;
+    color: $nb-ink;
 }
 
 .menu-item-bordered {
-    border-top: 1px solid $ui-black-transparent;
+    border-top: 3px solid $nb-ink;
 }
 
 .menu-item-danger:hover {
-    background: $error-primary;
+    background: $nb-pink;
 }

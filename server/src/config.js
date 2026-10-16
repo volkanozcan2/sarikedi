@@ -27,9 +27,8 @@ const loadConfig = (env = process.env) => {
         port: parsePort(env.PORT),
         host: env.HOST || '127.0.0.1',
         dataDir: dataDir,
-        uploadsDir: path.join(dataDir, 'uploads'),
+        projectsDir: path.join(dataDir, 'projects'),
         staticDir: env.STATIC_DIR ? path.resolve(env.STATIC_DIR) : null,
-        seedDir: path.resolve(env.SEED_DIR || path.join(__dirname, '..', 'seed')),
         adminPasswordHash: env.ADMIN_PASSWORD_HASH || '',
         // Üretim dışında verilmemişse süreç başına rastgele bir anahtar (oturumlar yeniden başlatmada düşer)
         sessionSecret: env.SESSION_SECRET || (production ? '' : crypto.randomBytes(32).toString('hex')),

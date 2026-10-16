@@ -18,21 +18,23 @@
   overflow: hidden;  /* Mask the icon animation */
   width: 1.75rem;
   height: 1.75rem;
-  box-shadow: 0px 0px 0px 2px $looks-transparent;
-  background-color: $looks-secondary;
-  color: $ui-white;
+  border: 3px solid $nb-ink;
+  box-shadow: 2px 2px 0 $nb-shadow;
+  background-color: $nb-pink;
+  color: $nb-ink;
   border-radius: 50%;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: $font-body;
   user-select: none;
   cursor: pointer;
   transition: all 0.15s ease-out;
 }
 
 .delete-button-clicked {
-  background-color: $data-primary;
+  background-color: $nb-yellow;
 }
 
 .delete-icon {
+    filter: $nb-ink-filter;
     position: relative;
     margin: 0.25rem;
     user-select: none;

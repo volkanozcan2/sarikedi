@@ -26,9 +26,14 @@ import Backpack from '../../containers/backpack.jsx';
 import WebGlModal from '../../containers/webgl-modal.jsx';
 import TipsLibrary from '../../containers/tips-library.jsx';
 import Cards from '../../containers/cards.jsx';
-import AboutModal from '../../containers/about-modal.jsx';
-import LessonsLibrary from '../../containers/lessons-library.jsx';
+import SharedGallery from '../../containers/shared-gallery.jsx';
+import LessonsGallery from '../../containers/lessons-gallery.jsx';
+import LessonRecorder from '../../containers/lesson-recorder.jsx';
+import LessonEditor from '../../containers/lesson-editor.jsx';
 import LessonPlayer from '../../containers/lesson-player.jsx';
+import AccountProjects from '../../containers/account-projects.jsx';
+import AccountModals from '../../containers/account-modals.jsx';
+import AboutModal from '../../containers/about-modal.jsx';
 import AuthorPanel from '../../containers/author-panel.jsx';
 import Alerts from '../../containers/alerts.jsx';
 import DragLayer from '../../containers/drag-layer.jsx';
@@ -198,9 +203,14 @@ const GUIComponent = props => {
                     <Cards />
                 ) : null}
                 <AboutModal />
-                <LessonsLibrary vm={vm} />
+                <AccountModals />
+                <AccountProjects vm={vm} />
+                <SharedGallery vm={vm} />
+                <LessonsGallery vm={vm} />
+                <LessonRecorder vm={vm} />
+                <LessonEditor />
                 <LessonPlayer vm={vm} />
-                <AuthorPanel vm={vm} />
+                <AuthorPanel />
                 {alertsVisible ? (
                     <Alerts className={styles.alertsContainer} />
                 ) : null}

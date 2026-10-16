@@ -7,7 +7,7 @@
 }
 
 .body {
-    background: $ui-white;
+    background: $nb-paper;
     padding: 1.5rem 2.25rem;
 }
 
@@ -31,7 +31,8 @@
 }
 
 .workspace :global(.blocklySvg) {
-    background-color: $ui-primary;
+    background-color: $ui-white;
+    border: 3px solid $nb-ink;
 }
 
 /* Row of "card" buttons for modifying custom procedures */
@@ -42,19 +43,21 @@
 
 .option-card {
     background: white;
-    border: 2px solid $ui-black-transparent;
-    border-radius: $space;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
     padding: calc($space * 2);
     text-align: center;
     flex-grow: 1;
     cursor: pointer;
     transition: all 0.2s;
     flex-basis: 100px;
+    box-shadow: 3px 3px 0 $nb-shadow;
 }
 
 .option-card:hover {
-    border: 2px solid $looks-secondary;
-    box-shadow: 0px 0px 0px 4px $looks-transparent;
+    border-color: $nb-ink;
+    background: $nb-yellow;
+    box-shadow: 4px 4px 0 $nb-shadow;
 }
 
 .option-card + .option-card {
@@ -83,18 +86,19 @@
 }
 
 .button-row button {
-    border: 1px solid $ui-black-transparent;
-    border-radius: 0.25rem;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
     padding: 0.75rem 1rem;
-    background: white;
+    background: $ui-white;
+    box-shadow: 3px 3px 0 $nb-shadow;
     font-weight: bold;
     font-size: 0.85rem;
 }
 
 .button-row button.ok-button {
-    background: $looks-secondary;
-    border: $looks-secondary;
-    color: white;
+    background: $nb-yellow;
+    border-color: $nb-ink;
+    color: $nb-ink;
 }
 
 [dir="ltr"] .button-row button + button {

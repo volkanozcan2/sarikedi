@@ -5,20 +5,21 @@
     height: 2rem;
     padding: 0 0.75rem;
 
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 0.625rem;
-    font-weight: bold;
-    color: $text-primary;
+    font-family: $font-body;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $nb-ink;
+    background-color: $ui-white;
 
-    border-width: 1px;
+    border-width: 3px;
     border-style: solid;
-    border-color: $ui-black-transparent;
-    border-radius: 2rem;
+    border-color: $nb-ink;
+    border-radius: 0;
 
     outline: none;
     cursor: text;
-    transition: 0.25s ease-out; /* @todo: standardize with var */
-    box-shadow: none;
+    transition: background-color 0.08s linear, box-shadow 0.08s linear, translate 0.08s linear;
+    box-shadow: 3px 3px 0 $nb-shadow;
 
     /*
         For truncating overflowing text gracefully
@@ -32,12 +33,13 @@
 }
 
 .input-form:hover {
-    border-color: $looks-secondary;
+    background-color: $nb-paper;
 }
 
 .input-form:focus {
-    border-color: $looks-secondary;
-    box-shadow: 0 0 0 0.25rem $looks-transparent;
+    background-color: $ui-white;
+    border-color: $nb-ink;
+    box-shadow: 4px 4px 0 $nb-pink, 4px 4px 0 3px $nb-ink;
 }
 
 .input-small {

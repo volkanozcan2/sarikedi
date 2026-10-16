@@ -21,9 +21,10 @@
     justify-content: space-between;
     flex-shrink: 0;
     align-items: center;
-    height: $stage-menu-height;
-    padding-top: $space;
-    padding-bottom: $space;
+    height: calc($stage-menu-height + 0.75rem); /* sekme satırıyla aynı yükseklik: sahne ve kod alanı hizalı kalır */
+    /* bayrak ve durdur düğmeleri sekme haplarıyla aynı hizada, boşluğun ortasında (gölge payı için altta 3px) */
+    padding-top: 0;
+    padding-bottom: 3px;
 }
 
 .embed-scratch-logo img {
@@ -43,7 +44,7 @@
 .stage-size-row > *, .unselect-wrapper {
     /* Use a white background so semi-transparent selection states look correct */
     background-color: $ui-white;
-    border-radius: $form-radius;
+    border-radius: 0;
 }
 
 [dir="ltr"] .stage-size-toggle-group {
@@ -56,8 +57,10 @@
 
 .stage-button {
     display: block;
-    border: 1px solid $ui-black-transparent;
-    border-radius: $form-radius;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 3px 3px 0 $nb-shadow;
+    transition: translate 0.08s linear, box-shadow 0.08s linear, background-color 0.08s linear;
     width: calc(2rem + 2px);
     height: calc(2rem + 2px);
     background: $ui-white;
@@ -66,13 +69,22 @@
     cursor: pointer;
 }
 
+.stage-button:hover {
+    background-color: $nb-yellow;
+    translate: -1px -1px;
+    box-shadow: 4px 4px 0 $nb-shadow;
+}
+
 .stage-button:active {
-    background-color: $looks-transparent;
+    background-color: $nb-cyan;
+    translate: 3px 3px;
+    box-shadow: 0 0 0 $nb-shadow;
 }
 
 .stage-button-icon {
     width: 100%;
     height: 100%;
+    filter: $nb-ink-filter;
 }
 
 [dir="rtl"] .stage-button-icon {

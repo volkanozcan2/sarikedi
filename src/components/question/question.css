@@ -3,17 +3,17 @@
 
 .question-container {
     margin: $space;
-    border: 1px solid $ui-black-transparent;
-    border-radius: $space;
-    border-width: 2px;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
     padding: 1rem;
-    background: white;
+    background: $nb-paper;
+    box-shadow: 4px 4px 0 $nb-shadow;
 }
 
 .question-label {
     font-size: 0.75rem;
     font-weight: bold;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $font-body;
     color: $text-primary;
     padding-bottom: $space;
 }
@@ -30,11 +30,11 @@
     width: calc(2rem - $space);
     height: calc(2rem - $space);
 
-    border: none;
-    border-radius: 100%;
+    border: 2px solid $nb-ink;
+    border-radius: 0;
 
-    color: white;
-    background: $looks-secondary;
+    color: $nb-ink;
+    background: $nb-yellow;
 }
 
 [dir="ltr"] .question-submit-button {

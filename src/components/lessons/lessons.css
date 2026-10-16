@@ -1,0 +1,390 @@
+@import "../../css/units.css";
+@import "../../css/colors.css";
+@import "../../css/z-index.css";
+
+/* ---- kayıt şeridi (öğretmen ders kaydederken) ---- */
+.record-bar {
+    position: fixed;
+    top: 3.75rem;
+    left: 50%;
+    margin-left: -21rem;
+    width: 42rem;
+    z-index: $z-index-card;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: $nb-paper;
+    border: 3px solid $nb-ink;
+    box-shadow: 5px 5px 0 $nb-shadow;
+    font-family: $font-body;
+    color: $nb-ink;
+}
+
+.record-dot {
+    flex: none;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    border: 2px solid $nb-ink;
+    background: #E8503A;
+    animation: record-pulse 1s ease-in-out infinite alternate;
+}
+
+.record-dot.paused {
+    background: $nb-paper-dark;
+    animation: none;
+}
+
+@keyframes record-pulse {
+    to { opacity: 0.35; }
+}
+
+.record-status {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.record-title {
+    font-family: $font-heading;
+    font-size: 0.8rem;
+}
+
+.record-last {
+    font-size: 0.75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.note-input {
+    width: 11rem;
+    height: 2rem;
+    padding: 0 0.5rem;
+    border: 2px solid $nb-ink;
+    background: $ui-white;
+    font-family: $font-body;
+    font-size: 0.8rem;
+    color: $nb-ink;
+}
+
+.button {
+    flex: none;
+    height: 2rem;
+    padding: 0 0.7rem;
+    border: 2px solid $nb-ink;
+    background: $ui-white;
+    box-shadow: 2px 2px 0 $nb-shadow;
+    font-family: $font-body;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: $nb-ink;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: $nb-yellow;
+}
+
+.button:active {
+    box-shadow: none;
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.button-primary {
+    background: $nb-cyan;
+}
+
+.button-danger {
+    background: $nb-pink;
+}
+
+/* ---- adım düzenleyici ---- */
+.editor-modal {
+    width: 46rem;
+}
+
+.editor-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem 1.25rem;
+    max-height: 75vh;
+    overflow-y: auto;
+    background: $nb-paper;
+    font-family: $font-body;
+    color: $nb-ink;
+}
+
+.row {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.input,
+.select,
+.textarea {
+    border: 2px solid $nb-ink;
+    background: $ui-white;
+    padding: 0.4rem 0.5rem;
+    font-family: $font-body;
+    font-size: 0.85rem;
+    color: $nb-ink;
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 2.6rem;
+}
+
+.steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.step {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 0.5rem;
+    border: 2px solid $nb-ink;
+    background: $ui-white;
+    box-shadow: 3px 3px 0 $nb-shadow;
+}
+
+.step-note {
+    background: $nb-yellow;
+}
+
+.step-number {
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid $nb-ink;
+    background: $nb-cyan;
+    font-family: $font-heading;
+    font-size: 0.75rem;
+}
+
+.step-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.step-main .textarea {
+    width: 100%;
+}
+
+.step-free {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+    font-size: 0.75rem;
+}
+
+.step-tools {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.icon-button {
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 2px solid $nb-ink;
+    background: $ui-white;
+    font-weight: 700;
+    color: $nb-ink;
+    cursor: pointer;
+}
+
+.icon-button:hover {
+    background: $nb-yellow;
+}
+
+.icon-button:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.error {
+    padding: 0.5rem 0.75rem;
+    border: 2px solid $nb-ink;
+    background: $nb-pink;
+    font-weight: 700;
+}
+
+.notice {
+    padding: 0.5rem 0.75rem;
+    border: 2px solid $nb-ink;
+    background: $nb-green;
+    font-weight: 700;
+}
+
+.hint {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+/* ---- dersler penceresi ---- */
+.gallery-modal {
+    width: 52rem;
+}
+
+.lesson-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 0.9rem;
+}
+
+.lesson-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.75rem;
+    border: 3px solid $nb-ink;
+    background: $ui-white;
+    box-shadow: 4px 4px 0 $nb-shadow;
+    text-align: left;
+    font-family: $font-body;
+    color: $nb-ink;
+}
+
+.lesson-title {
+    font-family: $font-heading;
+    font-size: 0.95rem;
+}
+
+.lesson-meta {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.lesson-description {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.lesson-actions {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding-top: 0.35rem;
+}
+
+.badge {
+    align-self: flex-start;
+    padding: 0.05rem 0.4rem;
+    border: 2px solid $nb-ink;
+    background: $nb-yellow;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+/* ---- öğrenci: adım kartı ---- */
+.step-card {
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    margin-left: -16rem;
+    width: 32rem;
+    z-index: $z-index-card;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 0.9rem;
+    background: $nb-paper;
+    border: 3px solid $nb-ink;
+    box-shadow: 6px 6px 0 $nb-shadow;
+    font-family: $font-body;
+    color: $nb-ink;
+}
+
+.step-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.step-card-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: $font-heading;
+    font-size: 0.85rem;
+}
+
+.step-card-count {
+    flex: none;
+    padding: 0.1rem 0.45rem;
+    border: 2px solid $nb-ink;
+    background: $nb-cyan;
+    font-family: $font-heading;
+    font-size: 0.75rem;
+}
+
+.progress {
+    height: 0.6rem;
+    border: 2px solid $nb-ink;
+    background: $ui-white;
+}
+
+.progress-fill {
+    height: 100%;
+    background: $nb-green;
+    transition: width 0.3s ease;
+}
+
+.step-card-text {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.step-card-text.is-note {
+    padding: 0.4rem 0.55rem;
+    border: 2px dashed $nb-ink;
+    background: $nb-yellow;
+}
+
+.step-card-done {
+    margin: 0;
+    font-family: $font-heading;
+    font-size: 1.05rem;
+}

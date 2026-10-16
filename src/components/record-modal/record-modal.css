@@ -6,7 +6,7 @@
 }
 
 .body {
-    background: $ui-white;
+    background: $nb-paper;
     padding: 1.5rem 2.25rem;
 }
 
@@ -16,9 +16,10 @@
 }
 
 .meter-container, .waveform-container {
-    background: $ui-primary;
-    border: 1px solid $ui-black-transparent;
-    border-radius: 5px;
+    background: $ui-white;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 $nb-shadow;
     padding: 3px;
     /* Force these to be on their own render layer because they update often */
     transform: translateZ(0);
@@ -40,8 +41,8 @@
 
 .help-text {
     margin: 10px auto 0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: rgb(167, 170, 181);
+    font-family: $font-body;
+    color: $nb-ink;
     font-size: 0.95rem;
     font-weight: 500;
 }
@@ -84,18 +85,19 @@
 
 .button-row button {
     padding: 0.75rem 1rem;
-    border-radius: 0.25rem;
-    background: white;
-    border: 1px solid $ui-black-transparent;
+    border-radius: 0;
+    background: $ui-white;
+    border: 3px solid $nb-ink;
+    box-shadow: 3px 3px 0 $nb-shadow;
     font-weight: 600;
     font-size: 0.85rem;
-    color: $looks-secondary;
+    color: $nb-ink;
 }
 
 .button-row button.ok-button {
-    background: $looks-secondary;
-    border: $looks-secondary;
-    color: white;
+    background: $nb-yellow;
+    border-color: $nb-ink;
+    color: $nb-ink;
 }
 
 .button-row button + button {

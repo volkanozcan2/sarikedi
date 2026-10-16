@@ -12,15 +12,17 @@
     max-width: 160px;
     margin: $space;
     padding: 1rem 1rem 0 1rem;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $font-body;
     color: $text-primary;
     background: white;
-    border-width: 2px;
+    border-width: 3px;
     border-style: solid;
-    border-color: $ui-black-transparent;
-    border-radius: $space;
+    border-color: $nb-ink;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 $nb-shadow;
     text-align: center;
     cursor: pointer;
+    transition: translate 0.08s linear, box-shadow 0.08s linear, background-color 0.08s linear;
 }
 
 .library-item-extension {
@@ -28,8 +30,23 @@
 }
 
 .library-item:hover {
-    border-width: 2px;
-    border-color: $looks-secondary;
+    border-width: 3px;
+    border-color: $nb-ink;
+    background: $nb-yellow;
+    translate: -2px -2px;
+    box-shadow: 6px 6px 0 $nb-shadow;
+}
+
+.library-item:focus {
+    outline: none;
+    background: $nb-yellow;
+    box-shadow: 5px 5px 0 $nb-pink, 5px 5px 0 3px $nb-ink;
+}
+
+.library-item:active {
+    background: $nb-cyan;
+    translate: 4px 4px;
+    box-shadow: none;
 }
 
 .hidden {
@@ -42,7 +59,10 @@
 }
 
 .disabled:hover {
-    border-color: $ui-black-transparent;
+    border-color: $nb-ink;
+    background: $ui-white;
+    translate: none;
+    box-shadow: 4px 4px 0 $nb-shadow;
 }
 
 .library-item-image-container-wrapper {
@@ -67,8 +87,8 @@
     background-color: $pen-primary;
     width: 3.5rem;
     height: 3.5rem;
-    border-radius: 0.5rem;
-    border: 0.25rem solid $ui-white;
+    border-radius: 0;
+    border: 3px solid $nb-ink;
 }
 
 [dir="ltr"] .library-item-inset-image-container {
@@ -101,6 +121,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     min-width: 0;
+    font-weight: 700;
 }
 
 .featured-item {
@@ -113,10 +134,18 @@
 
 .featured-image-container {
     position: relative;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Farklı boyutlu görseller (ders kapakları dahil) aynı yükseklikte, oranı bozulmadan sığsın */
 .featured-image {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .featured-text {
@@ -188,12 +217,13 @@
 .coming-soon-text {
     position: absolute;
     background-color: $data-primary;
-    border-radius: 1rem;
-    box-shadow: 0 0 .5rem hsla(0, 0%, 0%, .25);
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 3px 3px 0 $nb-shadow;
     padding: .5rem 1rem;
     font-size: .875rem;
     font-weight: bold;
-    color: $ui-white;
+    color: $nb-ink;
 }
 
 [dir="ltr"] .coming-soon-text {

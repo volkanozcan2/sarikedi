@@ -15,6 +15,7 @@
     "clean": "rimraf ./build ./dist",
     "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"[skip ci] Build for $(git log --pretty=format:%H -n1)\"",
     "prepublish": "node scripts/prepublish.mjs",
+    "prune": "./prune-gh-pages.sh",
     "i18n:push": "tx-push-src scratch-editor interface translations/en.json",
     "i18n:src": "rimraf ./translations/messages/src && babel src > tmp.js && rimraf tmp.js && build-i18n-src ./translations/messages/src ./translations/",
     "start": "webpack serve",
@@ -24,8 +25,6 @@
     "test:lint": "eslint . --ext .js,.jsx",
     "test:unit": "jest test[\\\\/]unit",
     "test:server": "jest --forceExit test[\\\\/]server",
-    "test:lessons": "jest --forceExit test[\\\\/]lessons",
-    "build:lessons": "node lessons/build.js",
     "test:smoke": "jest --runInBand test[\\\\/]smoke",
     "watch": "webpack --watch"
   },
@@ -35,12 +34,15 @@
     }
   },
   "dependencies": {
+    "@fontsource/archivo-black": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
     "@microbit/microbit-universal-hex": "^0.2.2",
     "arraybuffer-loader": "^1.0.6",
     "autoprefixer": "^9.0.1",
     "balance-text": "^3.3.1",
     "base64-loader": "^1.0.0",
     "bowser": "^1.9.4",
+    "canvas-confetti": "^1.9.3",
     "cat-blocks": "npm:scratch-blocks@0.1.0-prerelease.20220318143026",
     "classnames": "^2.2.6",
     "computed-style-to-inline-style": "^3.0.0",

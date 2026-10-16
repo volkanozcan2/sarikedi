@@ -7,7 +7,10 @@ import VM from 'scratch-vm';
 import AudioEngine from 'scratch-audio';
 
 import {setProjectUnchanged} from '../reducers/project-changed';
+import {getPerformance} from './performance-settings';
+import {useRandomOutdoorBackdrop} from './random-backdrop';
 import {
+    LoadingState,
     LoadingStates,
     getIsLoadingWithId,
     onLoadedProject,
@@ -31,7 +34,8 @@ const vmManagerHOC = function (WrappedComponent) {
             if (!this.props.vm.initialized) {
                 this.audioEngine = new AudioEngine();
                 this.props.vm.attachAudioEngine(this.audioEngine);
-                this.props.vm.setCompatibilityMode(true);
+                // 30 FPS uyumluluk modu varsayılandır; 60 FPS / ara değer ayarı kaydedilmişse burada uygulanır
+                getPerformance(this.props.vm).apply();
                 this.props.vm.initialized = true;
                 this.props.vm.setLocale(this.props.locale, this.props.messages);
             }
@@ -52,12 +56,19 @@ const vmManagerHOC = function (WrappedComponent) {
             }
         }
         loadProject () {
+            const isNewDefault = this.props.loadingState === LoadingState.LOADING_VM_NEW_DEFAULT;
             return this.props.vm.loadProject(this.props.projectData)
                 .then(() => {
                     this.props.onLoadedProject(this.props.loadingState, this.props.canSave);
                     // Wrap in a setTimeout because skin loading in
                     // the renderer can be async.
                     setTimeout(() => this.props.onSetProjectUnchanged());
+
+                    // Yeni (varsayılan) projede her açılışta rastgele bir bina dışı dekor
+                    if (isNewDefault) {
+                        useRandomOutdoorBackdrop(this.props.vm)
+                            .then(() => this.props.onSetProjectUnchanged());
+                    }
 
                     // If the vm is not running, call draw on the renderer manually
                     // This draws the state of the loaded project with no blocks running

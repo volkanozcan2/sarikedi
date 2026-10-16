@@ -4,13 +4,13 @@ After=network.target
 
 [Service]
 Type=simple
-User=sarikedi
-WorkingDirectory=/srv/sarikedi/api
+User=ben
+WorkingDirectory=/home/ben/server/sarikedi-api
 Environment=NODE_ENV=production
 Environment=PORT=3001
 Environment=HOST=127.0.0.1
-Environment=DATA_DIR=/srv/sarikedi/data
-Environment=STATIC_DIR=/srv/sarikedi/gui
+Environment=DATA_DIR=/home/ben/server/sarikedi-data
+Environment=STATIC_DIR=/home/ben/server/sarikedi
 # Gizli bilgiler (ADMIN_PASSWORD_HASH, SESSION_SECRET) bu dosyada tutulur:
 #   sudo install -m 600 -o root -g root /dev/null /etc/sarikedi.env
 #   sudo nano /etc/sarikedi.env   (iki satır: ADMIN_PASSWORD_HASH=scrypt:...  ve  SESSION_SECRET=...)
@@ -24,7 +24,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only
-ReadWritePaths=/srv/sarikedi/data
+ReadWritePaths=/home/ben/server/sarikedi-data
 ProtectKernelTunables=true
 ProtectControlGroups=true
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX

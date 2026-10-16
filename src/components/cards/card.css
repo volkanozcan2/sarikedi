@@ -20,8 +20,8 @@
     height: 90%;
     position: absolute;
     top: 5%;
-    background: $ui-white;
-    border: 1px solid $ui-tertiary;
+    background: $nb-paper;
+    border: 3px solid $nb-ink;
     width: .75rem;
     z-index: 10;
     opacity: 0.9;
@@ -31,15 +31,15 @@
 .left-card {
     left: -.75rem;
     border-right: 0;
-    border-top-left-radius: 0.75rem;
-    border-bottom-left-radius: 0.75rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .right-card {
     right: -.75rem;
     border-left: 0;
-    border-top-right-radius: 0.75rem;
-    border-bottom-right-radius: 0.75rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .left-card::after, .right-card::after {
@@ -49,7 +49,7 @@
     left: 0;
     height: 2.5rem;
     width: 100%;
-    background: $extensions-primary;
+    background: $nb-yellow;
 }
 
 .left-button, .right-button {
@@ -59,11 +59,12 @@
     z-index: 20;
     user-select: none;
     cursor: pointer;
-    background: $extensions-primary;
-    box-shadow: 0 0 0 4px $extensions-transparent;
+    background: $nb-pink;
+    border: 3px solid $nb-ink;
+    box-shadow: 3px 3px 0 $nb-shadow;
     height: 44px;
     width: 44px;
-    border-radius: 100%;
+    border-radius: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -71,7 +72,7 @@
 }
 
 .left-button:hover, .right-button:hover {
-    box-shadow: 0 0 0 6px $extensions-transparent;
+    box-shadow: 4px 4px 0 $nb-shadow;
     transform: scale(1.125);
 }
 
@@ -88,16 +89,16 @@
 }
 
 .card {
-    border: 1px solid $ui-tertiary;
-    border-radius: 0.75rem;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
     display: flex;
     flex-direction: column;
     cursor: move;
     z-index: 20;
     overflow: hidden;
-    box-shadow: 0px 5px 25px 5px $ui-black-transparent;
+    box-shadow: 8px 8px 0 $nb-shadow;
     align-items: center;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $font-body;
 }
 
 .header-buttons {
@@ -106,8 +107,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background: $extensions-primary;
-    border-bottom: 1px solid $extensions-tertiary;
+    background: $nb-yellow;
+    border-bottom: 3px solid $nb-ink;
     font-size: 0.625rem;
     font-weight: bold;
 }
@@ -127,7 +128,7 @@
 
 .shrink-expand-button {
     cursor: pointer;
-    color: white;
+    color: $nb-ink;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -141,7 +142,7 @@
 
 .remove-button, .all-button {
     cursor: pointer;
-    color: white;
+    color: $nb-ink;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -163,7 +164,7 @@
 
 .step-body {
     width: 100%;
-    background: $ui-white;
+    background: $nb-paper;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -184,8 +185,8 @@
     max-height: 200px;
     object-fit: contain;
     background: #F9F9F9;
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
     overflow: hidden;
     margin: 0 0.5rem 0.5rem;
 }
@@ -202,8 +203,9 @@
     flex-direction: column;
     margin: 0 8px 8px;
     cursor: pointer;
-    border: 1px solid $ui-black-transparent;
-    border-radius: 0.25rem;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 3px 3px 0 $nb-shadow;
     overflow: hidden;
 }
 
@@ -260,13 +262,14 @@
 .see-all-button {
     cursor: pointer;
     padding: 0.5rem 1rem;
-    background-color: $looks-secondary;
-    color: white;
+    background-color: $nb-yellow;
+    color: $nb-ink;
     font-weight: bold;
-    border-radius: 0.25rem;
+    border: 2px solid $nb-ink;
+    border-radius: 0;
     display: flex;
     align-items: center;
-    color: $ui-white;
+    color: $nb-ink;
     font-size: .75rem;
     font-weight: bold;
     line-height: 1rem;

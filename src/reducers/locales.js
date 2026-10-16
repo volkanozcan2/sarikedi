@@ -2,17 +2,23 @@ import {addLocaleData} from 'react-intl';
 
 import {localeData, isRtl} from 'scratch-l10n';
 import editorMessages from 'scratch-l10n/locales/editor-msgs';
+import trOverrides from '../lib/tr-overrides';
 
 addLocaleData(localeData);
 
 const UPDATE_LOCALES = 'scratch-gui/locales/UPDATE_LOCALES';
 const SELECT_LOCALE = 'scratch-gui/locales/SELECT_LOCALE';
 
+// Türkçe çevirisi eksik (İngilizce kalmış) metinleri yerel Türkçe karşılıklarıyla değiştir
+const messagesByLocale = Object.assign({}, editorMessages, {
+    tr: Object.assign({}, editorMessages.tr, trOverrides)
+});
+
 const initialState = {
     isRtl: false,
     locale: 'tr',
-    messagesByLocale: editorMessages,
-    messages: editorMessages.tr
+    messagesByLocale: messagesByLocale,
+    messages: messagesByLocale.tr
 };
 
 const reducer = function (state, action) {

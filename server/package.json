@@ -2,13 +2,11 @@
     "name": "sarikedi-server",
     "version": "1.0.0",
     "private": true,
-    "description": "SARIKEDİ ders API'si ve statik sunucu",
+    "description": "SARIKEDİ hesap, proje ve paylaşım API'si ve statik sunucu",
     "main": "src/index.js",
     "scripts": {
         "start": "node src/index.js",
-        "hash-password": "node scripts/hash-password.js",
-        "build:shared": "node scripts/build-shared.js",
-        "reseed": "node scripts/reseed.js"
+        "hash-password": "node scripts/hash-password.js"
     },
     "engines": {
         "node": ">=20"

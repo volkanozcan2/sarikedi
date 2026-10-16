@@ -3,7 +3,7 @@ const request = require('supertest');
 const {openStore} = require('../../server/src/db');
 const {createApp} = require('../../server/src/app');
 const {createRateLimiter, createSessionToken} = require('../../server/src/auth');
-const {PASSWORD, validLesson, testConfig} = require('./helpers');
+const {PASSWORD, testConfig} = require('./helpers');
 
 const setup = options => {
     const store = openStore(':memory:');
@@ -26,39 +26,6 @@ describe('herkese açık API', () => {
         return request(app).get('/api/health')
             .expect(200)
             .then(res => expect(res.body).toEqual({ok: true}));
-    });
-
-    test('yalnızca yayındaki dersler listelenir, adım içeriği yoktur', () => {
-        const {app, store} = setup();
-        store.create(validLesson({id: 'acik-ders', order: 1}));
-        store.create(validLesson({id: 'gizli-ders', order: 0, published: false}));
-        return request(app).get('/api/lessons')
-            .expect(200)
-            .expect('Cache-Control', 'no-cache')
-            .then(res => {
-                expect(res.body.map(l => l.id)).toEqual(['acik-ders']);
-                expect(res.body[0].steps).toBeUndefined();
-                expect(res.body[0].stepCount).toBe(1);
-            });
-    });
-
-    test('yayındaki ders tamamen gelir, yayında olmayan 404', () => {
-        const {app, store} = setup();
-        store.create(validLesson({id: 'acik-ders'}));
-        store.create(validLesson({id: 'gizli-ders', published: false}));
-        return request(app).get('/api/lessons/acik-ders').expect(200)
-            .then(res => {
-                expect(res.body.steps).toHaveLength(1);
-                return request(app).get('/api/lessons/gizli-ders').expect(404);
-            })
-            .then(() => request(app).get('/api/lessons/yok').expect(404))
-            .then(res => expect(res.body.error).toBe('Ders bulunamadı'));
-    });
-
-    test('tuhaf kimlikler çökmez', () => {
-        const {app} = setup();
-        return Promise.all(['__proto__', '%00', '..%2F..%2Fetc%2Fpasswd', 'a'.repeat(500)].map(id =>
-            request(app).get(`/api/lessons/${id}`).expect(404)));
     });
 
     test('bilinmeyen /api yolu JSON 404', () => {
@@ -263,7 +230,7 @@ describe('çıkış oturumu gerçekten bitirir', () => {
     });
 });
 
-describe('yönetici ders API\'si', () => {
+describe('yönetici uçları', () => {
     const adminAgent = () => {
         const ctx = setup();
         const agent = request.agent(ctx.app);
@@ -273,134 +240,34 @@ describe('yönetici ders API\'si', () => {
     test('girişsiz tüm yönetici uçları 401', () => {
         const {app} = setup();
         return Promise.all([
-            request(app).get('/api/admin/lessons').expect(401),
-            request(app).post('/api/admin/lessons').send(validLesson()).expect(401),
-            request(app).get('/api/admin/lessons/ilk-ders').expect(401),
-            request(app).put('/api/admin/lessons/ilk-ders').send(validLesson()).expect(401),
-            request(app).delete('/api/admin/lessons/ilk-ders').expect(401),
-            request(app).put('/api/admin/order').send({ids: []}).expect(401),
-            request(app).post('/api/admin/upload').send(Buffer.alloc(32)).expect(401)
+            request(app).get('/api/admin/me').expect(401),
+            request(app).get('/api/admin/accounts').expect(401),
+            request(app).post('/api/admin/teachers/1/approve').expect(401),
+            request(app).delete('/api/admin/teachers/1').expect(401)
         ]);
     });
 
-    test('oluştur, oku, güncelle, sil', () => {
-        let ctx;
-        return adminAgent().then(c => {
-            ctx = c;
-            return ctx.agent.post('/api/admin/lessons').send(validLesson()).expect(201);
-        }).then(res => {
-            expect(res.body.id).toBe('ilk-ders');
-            return ctx.agent.get('/api/admin/lessons/ilk-ders').expect(200);
-        }).then(res => {
-            expect(res.body.title).toBe('İlk ders');
-            return ctx.agent.put('/api/admin/lessons/ilk-ders').send(validLesson({title: 'Güncel'})).expect(200);
-        }).then(res => {
-            expect(res.body.title).toBe('Güncel');
-            return ctx.agent.get('/api/admin/lessons').expect(200);
-        }).then(res => {
-            expect(res.body).toHaveLength(1);
-            expect(res.body[0].published).toBe(true);
-            return ctx.agent.delete('/api/admin/lessons/ilk-ders').expect(204);
-        }).then(() => ctx.agent.get('/api/admin/lessons/ilk-ders').expect(404));
-    });
+    test('girişli yönetici hesap listesini görür', () => adminAgent()
+        .then(ctx => ctx.agent.get('/api/admin/accounts').expect(200))
+        .then(res => expect(Array.isArray(res.body.teachers)).toBe(true)));
 
-    test('yönetici listesi yayında olmayanları da gösterir; yayında olmayan ders yönetici ile okunur', () => {
-        let ctx;
-        return adminAgent().then(c => {
-            ctx = c;
-            ctx.store.create(validLesson({id: 'gizli-ders', published: false}));
-            return ctx.agent.get('/api/admin/lessons').expect(200);
-        }).then(res => {
-            expect(res.body.map(l => l.id)).toEqual(['gizli-ders']);
-            return ctx.agent.get('/api/admin/lessons/gizli-ders').expect(200);
-        });
-    });
+    test('yönetici yazmaları farklı Origin ile 403', () => adminAgent()
+        .then(ctx => ctx.agent.post('/api/admin/teachers/1/approve').set('Origin', 'https://kotu.example')
+            .expect(403)));
 
-    test('geçersiz ders 400 ve hata listesi; hiçbir şey kaydedilmez', () => {
-        let ctx;
-        return adminAgent().then(c => {
-            ctx = c;
-            return ctx.agent.post('/api/admin/lessons').send(validLesson({level: 'uzman'})).expect(400);
-        }).then(res => {
-            expect(res.body.error).toBe('Ders geçersiz');
-            expect(res.body.errors.join('\n')).toContain('level:');
-            expect(ctx.store.listAll()).toHaveLength(0);
-        });
-    });
-
-    test('var olan kimlik 409; PUT yok 404; kimlik uyuşmazlığı 400', () => {
-        let ctx;
-        return adminAgent().then(c => {
-            ctx = c;
-            ctx.store.create(validLesson());
-            return ctx.agent.post('/api/admin/lessons').send(validLesson()).expect(409);
-        }).then(() => ctx.agent.put('/api/admin/lessons/yok').send(validLesson({id: 'yok'})).expect(404))
-            .then(() => ctx.agent.put('/api/admin/lessons/ilk-ders').send(validLesson({id: 'baska'})).expect(400))
-            .then(() => ctx.agent.delete('/api/admin/lessons/yok').expect(404));
-    });
-
-    test('bozuk JSON 400, gövde olmayan istek 400, çok büyük gövde 413', () => {
-        let ctx;
-        return adminAgent().then(c => {
-            ctx = c;
-            return ctx.agent.post('/api/admin/lessons').set('Content-Type', 'application/json').send('{bozuk').expect(400);
-        }).then(res => {
-            expect(res.body.error).toBe('Geçersiz JSON');
-            return ctx.agent.post('/api/admin/lessons').send(validLesson({description: 'x'.repeat(1100000)})).expect(413);
-        }).then(res => expect(res.body.error).toBe('İstek çok büyük'))
-            .then(() => ctx.agent.post('/api/admin/lessons').expect(400));
-    });
-
-    test('501 düğümlük kalıp reddedilir', () => {
-        let ctx;
-        return adminAgent().then(c => {
-            ctx = c;
-            let node = {opcode: 'motion_movesteps', fields: {}, inputs: {}, next: null};
-            const root = node;
-            for (let i = 0; i < 500; i++) {
-                node.next = {opcode: 'motion_movesteps', fields: {}, inputs: {}, next: null};
-                node = node.next;
-            }
-            const lesson = validLesson();
-            lesson.steps[0].checks = [{type: 'blocks', pattern: root}];
-            return ctx.agent.post('/api/admin/lessons').send(lesson).expect(400);
-        }).then(res => expect(res.body.errors.join('\n')).toContain('kalıp çok büyük'));
-    });
-
-    test('__proto__ ve kısıtlı alanlarla gelen ders reddedilir', () => {
-        return adminAgent().then(ctx => ctx.agent.post('/api/admin/lessons')
-            .set('Content-Type', 'application/json')
-            .send('{"id":"__proto__","title":"x","description":"","level":"orta","cover":null,"order":0,"published":true,' +
-                '"startProject":null,"steps":[]}')
-            .expect(400));
-    });
-
-    test('sıralama', () => {
-        let ctx;
-        return adminAgent().then(c => {
-            ctx = c;
-            ctx.store.create(validLesson({id: 'a-ders', order: 0}));
-            ctx.store.create(validLesson({id: 'b-ders', order: 1}));
-            return ctx.agent.put('/api/admin/order').send({ids: ['b-ders', 'a-ders']}).expect(200);
-        }).then(res => {
-            expect(res.body).toEqual({ok: true});
-            expect(ctx.store.listPublished().map(l => l.id)).toEqual(['b-ders', 'a-ders']);
-            return ctx.agent.put('/api/admin/order').send({ids: ['yok']}).expect(404);
-        }).then(() => ctx.agent.put('/api/admin/order').send({ids: 'a-ders'}).expect(400));
-    });
-
-    test('yönetici yazmaları farklı Origin ile 403', () => {
-        return adminAgent().then(ctx => ctx.agent.post('/api/admin/lessons').set('Origin', 'https://kotu.example')
-            .send(validLesson()).expect(403));
-    });
+    test('eski yönetici ders uçları artık yok (404); yeni ders listesi açık', () => adminAgent().then(ctx => Promise.all([
+        request(ctx.app).get('/api/lessons')
+            .expect(200),
+        ctx.agent.get('/api/admin/lessons').expect(404)
+    ])));
 
     test('beklenmeyen hata 500 ve ayrıntı sızdırmaz', () => {
         return adminAgent().then(ctx => {
-            ctx.store.listAll = () => {
+            ctx.store.accounts.adminOverview = () => {
                 throw new Error('gizli veritabanı yolu /srv/secret.db');
             };
             const quiet = jest.spyOn(console, 'error').mockImplementation(() => {});
-            return ctx.agent.get('/api/admin/lessons').expect(500).then(res => {
+            return ctx.agent.get('/api/admin/accounts').expect(500).then(res => {
                 quiet.mockRestore();
                 expect(res.body).toEqual({error: 'Sunucu hatası'});
                 expect(JSON.stringify(res.body)).not.toContain('secret');

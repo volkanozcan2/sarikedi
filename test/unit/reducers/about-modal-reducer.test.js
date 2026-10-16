@@ -1,5 +1,5 @@
 import modalReducer, {
-    modalsInitialState, openAboutModal, closeAboutModal, openLessonsLibrary
+    modalsInitialState, openAboutModal, closeAboutModal, openSharedGallery
 } from '../../../src/reducers/modals';
 
 describe('about modal reducer', () => {
@@ -11,10 +11,10 @@ describe('about modal reducer', () => {
         expect(opened.aboutModal).toBe(true);
         expect(modalReducer(opened, closeAboutModal()).aboutModal).toBe(false);
     });
-    test('opening the lessons library does not leave about open', () => {
+    test('opening another modal does not leave about open', () => {
         const opened = modalReducer(modalsInitialState, openAboutModal());
-        const next = modalReducer(modalReducer(opened, closeAboutModal()), openLessonsLibrary());
+        const next = modalReducer(modalReducer(opened, closeAboutModal()), openSharedGallery());
         expect(next.aboutModal).toBe(false);
-        expect(next.lessonsLibrary).toBe(true);
+        expect(next.sharedGallery).toBe(true);
     });
 });

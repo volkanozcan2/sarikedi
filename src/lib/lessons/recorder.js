@@ -1,318 +1,207 @@
-/**
- * @fileoverview
- * Yönetim paneli "kayıt modu": yönetici oyunu Scratch'te yaparken her "Adımı kaydet"te
- * çalışma alanının önceki kayıtla farkı bir ders adımına çevrilir (blok kontrolü, el rehberi,
- * taslak metin). Saf mantık: vm'den yalnızca capture.js üzerinden okur, React/DOM bilmez.
- */
-
-import {capturePattern, listScripts} from './capture';
-
-const MAX_GUIDED_BLOCKS = 8;
-
-// Çeviride bayrak simgesi metin olarak kalmıyor ("flag e tıklandığında"); öğrenciye yeşil bayrak denir
-const humanizeLabel = label => String(label).replace(/\bflag e\b/i, 'yeşil bayrağa');
-
-// Scratch'in iç (İngilizce) seçenek değerleri → öğrencinin göreceği ad
-const VALUE_NAMES = {
-    'right arrow': 'sağ ok',
-    'left arrow': 'sol ok',
-    'up arrow': 'yukarı ok',
-    'down arrow': 'aşağı ok',
-    'space': 'boşluk',
-    'any': 'herhangi bir tuş',
-    '_mouse_': 'fare imleci',
-    '_edge_': 'kenar',
-    '_random_': 'rastgele konum',
-    '_myself_': 'kendisi',
-    '_stage_': 'sahne'
-};
-
-const CATEGORIES = {
-    motion: {id: 'motion', label: 'Hareket'},
-    looks: {id: 'looks', label: 'Görünüm'},
-    sound: {id: 'sound', label: 'Ses'},
-    event: {id: 'events', label: 'Olaylar'},
-    control: {id: 'control', label: 'Kontrol'},
-    sensing: {id: 'sensing', label: 'Algılama'},
-    operator: {id: 'operators', label: 'İşlemler'},
-    data: {id: 'variables', label: 'Değişkenler'},
-    procedures: {id: 'myBlocks', label: 'Bloklarım'}
-};
+import {snapshotBlocks, diffSnapshots} from './snapshot';
 
 /**
- * @param {string} opcode blok türü
- * @return {?object} {id, label} ya da bilinmeyen (eklenti) kategori için null
+ * Ders kaydedici: öğretmenin editörde yaptıklarını proje durumundaki farklardan adım adım çıkarır.
+ * Fare hareketi tutulmaz; "şu blok şuraya takıldı", "şu kukla eklendi" gibi anlamlı adımlar tutulur.
+ *
+ * Durum biçimi (update/start): {targets: [{id, name, isStage, blocks, costumes: [ad], sounds: [ad]}],
+ * extensions: [{id, name}],
+ * editingTarget: kimlik, tab: 'code' | 'costumes' | 'sounds'}
+ *
+ * @param {object} [options] - labelFor(targetId, blockId): bloğun ekrandaki yazısı ("10 adım git")
+ * @returns {object} start(state, [öncekiAdımlar]), update(state), addNote(yazı), getSteps()
  */
-const categoryOf = opcode => {
-    const category = CATEGORIES[String(opcode).split('_')[0]];
-    return category ? {id: category.id, label: category.label} : null;
-};
+const createRecorder = (options = {}) => {
+    const labelFor = options.labelFor || (() => null);
+    let steps = [];
+    let snaps = {}; // kukla kimliği → blok görüntüsü
+    let targets = {}; // kukla kimliği → {name, isStage, costumes, sounds}
+    let editingTarget = null;
+    let extensions = []; // eklenmiş eklenti kimlikleri
+    let tab = 'code';
+    let startTab = 'code';
+    let addedSprites = []; // kayıt sırasında eklenen kuklalar
+    const labels = {}; // blok kimliği → son bilinen yazı (silinen bloklar için)
 
-// ön sıra: blok, giriş blokları, sonraki blok
-const flattenNodes = (node, list) => {
-    list.push(node);
-    Object.keys(node.inputs).forEach(name => {
-        if (!('literal' in node.inputs[name])) flattenNodes(node.inputs[name], list);
-    });
-    if (node.next) flattenNodes(node.next, list);
-    return list;
-};
-
-const flatten = (node, list) => flattenNodes(node, []).reduce((opcodes, n) => {
-    opcodes.push(n.opcode);
-    return opcodes;
-}, list);
-
-const countOpcodes = list => list.reduce((counts, opcode) => {
-    counts[opcode] = (counts[opcode] || 0) + 1;
-    return counts;
-}, {});
-
-const overlap = (a, b) => {
-    const counts = countOpcodes(b);
-    return a.reduce((sum, opcode) => {
-        if (counts[opcode] > 0) {
-            counts[opcode] -= 1;
-            return sum + 1;
-        }
-        return sum;
-    }, 0);
-};
-
-const originalTargets = vm => vm.runtime.targets.filter(target => target.isOriginal);
-
-const assetNames = (target, getter) => (typeof target[getter] === 'function' ?
-    target[getter]().map(asset => asset.name) : []);
-
-// kukla, dekor, kostüm ve ses adları (ekleme farkını bulmak için)
-const snapshotAssets = vm => {
-    const editing = vm.editingTarget;
-    const assets = {
-        sprites: [],
-        backdrops: [],
-        costumes: {},
-        sounds: {},
-        editing: editing ? (editing.isStage ? 'Sahne' : editing.getName()) : null
+    const label = (targetId, block, opcode) => {
+        const text = labelFor(targetId, block);
+        if (text) labels[block] = text;
+        return labels[block] || opcode;
     };
-    originalTargets(vm).forEach(target => {
-        if (target.isStage) {
-            assets.backdrops = assetNames(target, 'getCostumes');
-            assets.sounds.Sahne = assetNames(target, 'getSounds');
-        } else {
-            const name = target.getName();
-            assets.sprites.push(name);
-            assets.costumes[name] = assetNames(target, 'getCostumes');
-            assets.sounds[name] = assetNames(target, 'getSounds');
-        }
-    });
-    return assets;
-};
-
-const added = (before, after) => (after || []).filter(name => (before || []).indexOf(name) === -1);
-
-const ADD_GUIDES = {
-    sprite: {type: 'click', target: {kind: 'ui', id: 'addSprite'}, label: 'Kukla ekle'},
-    backdrop: {type: 'click', target: {kind: 'ui', id: 'addBackdrop'}, label: 'Dekor ekle'},
-    costume: {type: 'click', target: {kind: 'ui', id: 'costumesTab'}, label: 'Kostümler'},
-    sound: {type: 'click', target: {kind: 'ui', id: 'soundsTab'}, label: 'Sesler'},
-    select: {type: 'click', target: {kind: 'ui', id: 'spriteList'}, label: 'Kukla listesi'},
-    selectStage: {type: 'click', target: {kind: 'ui', id: 'stageSelector'}, label: 'Sahne'}
-};
-
-// önceki kayda göre eklenen kukla/dekor/kostüm/ses: [{kind, name, sprite}]
-const assetChanges = (before, after) => {
-    const changes = [];
-    // başka bir kukla/sahne seçildi (yeni eklenen kukla kendiliğinden seçilir, ayrıca sayılmaz)
-    const addedSprites = added(before.sprites, after.sprites);
-    if (after.editing && after.editing !== before.editing && addedSprites.indexOf(after.editing) === -1) {
-        changes.push({kind: after.editing === 'Sahne' ? 'selectStage' : 'select', name: after.editing});
-    }
-    addedSprites.forEach(name => changes.push({kind: 'sprite', name: name}));
-    added(before.backdrops, after.backdrops).forEach(name => changes.push({kind: 'backdrop', name: name}));
-    // yeni kuklanın kostüm/sesleri kuklayla birlikte gelir, ayrıca anlatılmaz
-    before.sprites.forEach(sprite => {
-        if (after.sprites.indexOf(sprite) === -1) return;
-        added(before.costumes[sprite], after.costumes[sprite]).forEach(name => {
-            changes.push({kind: 'costume', name: name, sprite: sprite});
+    const last = () => steps[steps.length - 1];
+    const findAdd = block => steps.find(s => s.type === 'addBlock' && s.block === block);
+    const remember = state => {
+        targets = {};
+        snaps = {};
+        state.targets.forEach(t => {
+            targets[t.id] = {name: t.name, isStage: t.isStage, costumes: t.costumes.slice(), sounds: t.sounds.slice()};
+            snaps[t.id] = snapshotBlocks(t.blocks);
         });
-        added(before.sounds[sprite], after.sounds[sprite]).forEach(name => {
-            changes.push({kind: 'sound', name: name, sprite: sprite});
+        editingTarget = state.editingTarget;
+        tab = state.tab;
+        extensions = (state.extensions || []).map(extension => extension.id);
+    };
+    const rememberLabels = state => {
+        const target = state.targets.find(t => t.id === state.editingTarget);
+        if (target) Object.keys(snapshotBlocks(target.blocks)).forEach(id => label(target.id, id, ''));
+    };
+
+    const applyBlocks = (target, before, after) => {
+        const diff = diffSnapshots(before, after);
+        const name = target.name;
+        diff.removed.forEach(block => {
+            if (findAdd(block)) {
+                steps = steps.filter(s => s.block !== block);
+            } else {
+                steps.push({type: 'deleteBlock',
+                    target: name,
+                    targetId: target.id,
+                    block: block,
+                    opcode: before[block].opcode,
+                    label: label(target.id, block, before[block].opcode)});
+            }
         });
-    });
-    added(before.sounds.Sahne, after.sounds.Sahne).forEach(name => {
-        changes.push({kind: 'sound', name: name, sprite: 'Sahne'});
-    });
-    return changes;
-};
-
-const assetSentence = change => {
-    switch (change.kind) {
-    case 'select': return `Kukla listesinden "${change.name}" kuklasını seç.`;
-    case 'selectStage': return 'Sağ alttaki Sahne bölmesine tıklayıp sahneyi seç.';
-    case 'sprite': return `Kukla ekle düğmesine tıkla ve kütüphaneden "${change.name}" kuklasını seç.`;
-    case 'backdrop': return `Dekor ekle düğmesine tıkla ve kütüphaneden "${change.name}" dekorunu seç.`;
-    case 'costume': return `"${change.sprite}" kuklasının Kostümler sekmesinde "${change.name}" kostümünü ekle.`;
-    default: return `"${change.sprite}" kuklasının Sesler sekmesinde "${change.name}" sesini ekle.`;
-    }
-};
-
-const assetGuide = changes => changes.reduce((guide, change) => {
-    const action = ADD_GUIDES[change.kind];
-    const last = guide[guide.length - 1];
-    if (!last || last.target.id !== action.target.id) guide.push(action);
-    return guide;
-}, []);
-
-const snapshotScripts = vm => listScripts(vm).reduce((list, ref) => {
-    try {
-        const exact = capturePattern(vm, ref, {exact: true});
-        list.push({
-            sprite: ref.sprite,
-            key: `${ref.sprite}|${JSON.stringify(exact)}`,
-            opcodes: flatten(exact, []),
-            nodes: flattenNodes(exact, []),
-            ref: ref
-        });
-    } catch (error) {
-        // çok büyük ya da okunamayan betik kayda alınmaz
-    }
-    return list;
-}, []);
-
-/**
- * @param {object} vm scratch-vm
- * @return {object} {scripts: [{sprite, key, opcodes, nodes, ref}], assets} (tam değerli kalıbı olan betikler)
- */
-const snapshotWorkspace = vm => ({scripts: snapshotScripts(vm), assets: snapshotAssets(vm)});
-
-// bir betikteki yeni blokları, değişmeden önceki en benzer betiğe göre bulur: {fresh, used}
-const newBlocksOf = (script, candidates) => {
-    let best = -1;
-    let bestScore = 0;
-    candidates.forEach((candidate, index) => {
-        const score = overlap(script.opcodes, candidate.opcodes);
-        if (score > bestScore) {
-            best = index;
-            bestScore = score;
-        }
-    });
-    const used = best === -1 ? null : candidates[best];
-    const counts = used ? countOpcodes(used.opcodes) : {};
-    const fresh = [];
-    script.opcodes.forEach((opcode, index) => {
-        if (counts[opcode] > 0) {
-            counts[opcode] -= 1;
-        } else {
-            fresh.push({
-                opcode: opcode,
-                after: index === 0 ? null : script.opcodes[index - 1],
-                fields: script.nodes[index].fields
+        diff.added.forEach(block => {
+            const snap = after[block];
+            steps.push({
+                type: 'addBlock',
+                target: name,
+                targetId: target.id,
+                block: block,
+                opcode: snap.opcode,
+                attach: snap.attach,
+                fields: snap.fields,
+                values: snap.values,
+                changed: [],
+                label: label(target.id, block, snap.opcode),
+                parentLabel: snap.attach.to ? label(target.id, snap.attach.to, after[snap.attach.to].opcode) : null,
+                parentOpcode: snap.attach.to ? after[snap.attach.to].opcode : null
             });
-        }
-    });
-    return {fresh: fresh, used: used};
-};
-
-const buildGuide = (fresh, paletteOpcodes) => {
-    const known = paletteOpcodes && paletteOpcodes.length > 0 ? paletteOpcodes : null;
-    const guide = [];
-    let lastCategory = null;
-    fresh.slice(0, MAX_GUIDED_BLOCKS).forEach(item => {
-        if (known && known.indexOf(item.opcode) === -1) return;
-        const category = categoryOf(item.opcode);
-        if (category && category.id !== lastCategory) {
-            guide.push({type: 'click', target: {kind: 'category', id: category.id}, label: category.label});
-            lastCategory = category.id;
-        }
-        guide.push({
-            type: 'drag',
-            from: {kind: 'block', opcode: item.opcode},
-            to: item.after ? {kind: 'workspaceBlock', opcode: item.after} : {kind: 'workspace'},
-            label: 'Sürükle'
         });
-    });
-    return guide;
-};
-
-const buildText = (fresh, labels) => {
-    if (fresh.length === 0) return 'Bloklardaki değerleri düzenle.';
-    const sentences = fresh.slice(0, MAX_GUIDED_BLOCKS).map(item => {
-        const category = categoryOf(item.opcode);
-        const fields = item.fields || {};
-        let name = (typeof labels === 'function' ? labels(item.opcode) : labels && labels[item.opcode]) ||
-            item.opcode;
-        // paletteki blok adı varsayılan değişkeni gösterir; gerçek değişken adını yaz
-        const variable = fields.VARIABLE || fields.LIST;
-        if (variable) name = name.replace(/my variable/i, variable);
-        name = humanizeLabel(name);
-        const chosen = Object.keys(fields).map(key => fields[key])
-            .filter(Boolean)
-            .filter(value => value !== variable || name.indexOf(variable) === -1)
-            .map(value => VALUE_NAMES[value] || value)
-            .filter(value => value.charAt(0) !== '_');
-        const choice = chosen.length > 0 ? ` (seçenek: ${chosen.join(', ')})` : '';
-        return category ?
-            `${category.label} kategorisinden "${name}" bloğunu ekle${choice}.` :
-            `"${name}" bloğunu ekle${choice}.`;
-    });
-    if (fresh.length > MAX_GUIDED_BLOCKS) sentences.push('Kalan blokları da ekle.');
-    return sentences.join(' ');
-};
-
-/**
- * @param {object} vm scratch-vm
- * @param {object} baseline önceki snapshotWorkspace çıktısı
- * @param {object} [options] paletteOpcodes (rehber için), labels ({opcode: ad} ya da opcode => ad)
- * @return {object} {step: ?object (değişiklik yoksa null), snapshot: yeni anlık görüntü}
- */
-const recordStep = (vm, baseline, options) => {
-    const opts = options || {};
-    const after = snapshotWorkspace(vm);
-
-    const unmatched = baseline.scripts.slice();
-    const changed = after.scripts.filter(script => {
-        const index = unmatched.findIndex(old => old.key === script.key);
-        if (index === -1) return true;
-        unmatched.splice(index, 1);
-        return false;
-    });
-    const assets = assetChanges(baseline.assets, after.assets);
-    if (changed.length === 0 && assets.length === 0) return {step: null, snapshot: after};
-
-    const checks = [];
-    let fresh = [];
-    changed.forEach(script => {
-        const found = newBlocksOf(script, unmatched.filter(old => old.sprite === script.sprite));
-        fresh = fresh.concat(found.fresh);
-        if (found.used) unmatched.splice(unmatched.indexOf(found.used), 1);
-        checks.push({
-            type: 'blocks',
-            sprite: script.sprite,
-            pattern: capturePattern(vm, script.ref, {exact: false})
+        diff.moved.forEach(block => {
+            const snap = after[block];
+            const parentLabel = snap.attach.to ? label(target.id, snap.attach.to, after[snap.attach.to].opcode) : null;
+            const parentOpcode = snap.attach.to ? after[snap.attach.to].opcode : null;
+            const step = last();
+            if (step && step.block === block && (step.type === 'addBlock' || step.type === 'moveBlock')) {
+                step.attach = snap.attach;
+                step.parentLabel = parentLabel;
+                step.parentOpcode = parentOpcode;
+                return;
+            }
+            steps.push({type: 'moveBlock',
+                target: name,
+                targetId: target.id,
+                block: block,
+                opcode: snap.opcode,
+                attach: snap.attach,
+                label: label(target.id, block, snap.opcode),
+                parentLabel: parentLabel,
+                parentOpcode: parentOpcode});
         });
-    });
+        diff.changed.forEach(change => {
+            const snap = after[change.id];
+            const step = last();
+            if (step && step.type === 'addBlock' && step.block === change.id) {
+                step.fields = snap.fields;
+                step.values = snap.values;
+                if (step.changed.indexOf(change.key) === -1) step.changed.push(change.key);
+                // etiket paletteki ilk haliyle kalır ("10 adım git"); yeni değer cümlede ayrıca söylenir
+                return;
+            }
+            if (step && step.type === 'setValue' && step.block === change.id && step.key === change.key) {
+                step.value = change.value;
+                return;
+            }
+            steps.push({type: 'setValue',
+                target: name,
+                targetId: target.id,
+                block: change.id,
+                opcode: snap.opcode,
+                key: change.key,
+                value: change.value,
+                label: label(target.id, change.id, snap.opcode)});
+        });
+    };
 
-    const text = [];
-    if (assets.length > 0) text.push(assets.map(assetSentence).join(' '));
-    if (changed.length > 0) text.push(buildText(fresh, opts.labels));
+    const applyAssets = (target, before) => {
+        const newCostumes = target.costumes.filter(n => before.costumes.indexOf(n) === -1);
+        const newSounds = target.sounds.filter(n => before.sounds.indexOf(n) === -1);
+        newCostumes.forEach(n => steps.push(target.isStage ?
+            {type: 'addBackdrop', name: n} :
+            {type: 'addCostume', target: target.name, targetId: target.id, name: n}));
+        newSounds.forEach(n => steps.push({type: 'addSound', target: target.name, targetId: target.id, name: n}));
+    };
+
     return {
-        step: {
-            text: text.join(' '),
-            media: null,
-            hint: null,
-            checks: checks,
-            guide: assetGuide(assets).concat(buildGuide(fresh, opts.paletteOpcodes))
+        // steps: kayda devam edilirken önceki adımlar (o andan itibaren olan değişiklikler eklenir)
+        start: (state, previous) => {
+            steps = (previous || []).map(step => Object.assign({}, step));
+            snaps = {};
+            targets = {};
+            addedSprites = [];
+            remember(state);
+            startTab = state.tab;
+            rememberLabels(state);
         },
-        snapshot: after
+        update: state => {
+            const ids = state.targets.map(t => t.id);
+            // silinen kuklalar: kayıtta eklenmişse ona ait her şey unutulur
+            Object.keys(targets).forEach(id => {
+                if (ids.indexOf(id) !== -1) return;
+                if (addedSprites.indexOf(id) === -1) {
+                    steps.push({type: 'deleteSprite', name: targets[id].name});
+                } else {
+                    steps = steps.filter(s => s.targetId !== id);
+                    addedSprites = addedSprites.filter(x => x !== id);
+                }
+            });
+            // yeni kuklalar: kendi blokları/kostümleri adım sayılmaz
+            const justAdded = [];
+            state.targets.forEach(t => {
+                if (targets[t.id]) return;
+                justAdded.push(t.id);
+                addedSprites.push(t.id);
+                steps.push({type: 'addSprite', targetId: t.id, name: t.name});
+            });
+            state.targets.forEach(t => {
+                if (targets[t.id]) applyAssets(t, targets[t.id]);
+            });
+            (state.extensions || []).forEach(extension => {
+                if (extensions.indexOf(extension.id) === -1) {
+                    steps.push({type: 'addExtension', id: extension.id, name: extension.name});
+                }
+            });
+            // kukla seçimi (yeni eklenen kukla zaten seçili gelir, ayrı adım olmaz)
+            if (state.editingTarget !== editingTarget && justAdded.indexOf(state.editingTarget) === -1) {
+                const target = state.targets.find(t => t.id === state.editingTarget);
+                if (target) {
+                    const step = {
+                        type: 'selectSprite', targetId: target.id, name: target.name, isStage: target.isStage
+                    };
+                    if (last() && last().type === 'selectSprite') steps[steps.length - 1] = step;
+                    else steps.push(step);
+                    rememberLabels(state);
+                }
+            }
+            if (state.tab !== tab) {
+                if (last() && last().type === 'selectTab') steps.pop();
+                const previous = steps.filter(s => s.type === 'selectTab').pop();
+                const current = previous ? previous.tab : startTab;
+                if (state.tab !== current) steps.push({type: 'selectTab', tab: state.tab});
+            }
+            state.targets.forEach(t => {
+                if (!targets[t.id]) return;
+                applyBlocks(t, snaps[t.id], snapshotBlocks(t.blocks));
+            });
+            remember(state);
+        },
+        addNote: text => {
+            const clean = String(text || '').trim();
+            if (clean) steps.push({type: 'note', text: clean});
+        },
+        getSteps: () => steps.map(s => Object.assign({}, s))
     };
 };
 
-export {
-    buildGuide,
-    buildText,
-    flatten,
-    flattenNodes,
-    categoryOf,
-    snapshotWorkspace,
-    recordStep
-};
+export {createRecorder};

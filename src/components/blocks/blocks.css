@@ -24,9 +24,12 @@
     right: 0;
     bottom: 0;
     left: 0;
-    border: 1px solid $ui-black-transparent;
-    border-top-right-radius: $space;
-    border-bottom-right-radius: $space;
+    border: 3px solid $nb-ink;
+    border-left: 0;
+    border-radius: 0;
+    background-color: $ui-primary;
+    background-image: radial-gradient($nb-dot 2px, transparent 2.5px);
+    background-size: 28px 28px;
 }
 
 [dir="rtl"] .blocks :global(.injectionDiv) {
@@ -38,11 +41,40 @@
 
 .blocks :global(.blocklyMainBackground) {
     stroke: none;
+    fill: transparent;
+}
+
+.blocks :global(.blocklyFlyoutBackground) {
+    fill: $ui-white;
+    fill-opacity: 1;
+}
+
+.blocks :global(.scratchCategoryMenu) {
+    font-family: $font-body;
+    font-weight: 700;
+    background: $ui-primary;
+}
+
+.blocks :global(.scratchCategoryMenuItem) {
+    transition: background-color 0.08s linear;
+}
+
+.blocks :global(.scratchCategoryMenuItem:hover) {
+    background-color: $nb-pink;
+}
+
+.blocks :global(.scratchCategoryMenuItem:active) {
+    background-color: $nb-cyan;
+}
+
+.blocks :global(.categorySelected) {
+    background-color: $nb-yellow;
 }
 
 .blocks :global(.blocklyToolboxDiv) {
-    border-right: 1px solid $ui-black-transparent;
-    border-bottom: 1px solid $ui-black-transparent;
+    border-right: 3px solid $nb-ink;
+    border-bottom: 3px solid $nb-ink;
+    background-color: $ui-primary;
     box-sizing: content-box;
     height: calc(100% - 3.25rem) !important;
 
@@ -65,7 +97,7 @@
 }
 
 .blocks :global(.blocklyFlyout) {
-    border-right: 1px solid $ui-black-transparent;
+    border-right: 3px solid $nb-ink;
     box-sizing: content-box;
 }
 

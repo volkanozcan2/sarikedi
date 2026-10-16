@@ -4,17 +4,24 @@
     width: 2rem;
     height: 2rem;
     padding: 0.375rem;
-    border-radius: 0.25rem;
+    border-radius: 0;
+    border: 3px solid $nb-ink;
+    background-color: $ui-white;
+    box-shadow: 3px 3px 0 $nb-shadow;
+    transition: background-color 0.08s linear, translate 0.08s linear, box-shadow 0.08s linear;
     user-select: none;
     cursor: pointer;
 }
 
 .stop-all:hover {
-    background-color: $looks-light-transparent;
+    background-color: $nb-pink;
+    translate: -1px -1px;
+    box-shadow: 4px 4px 0 $nb-shadow;
 }
 
-.stop-all {
-    opacity: 0.5;
+.stop-all:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 $nb-shadow;
 }
 
 .stop-all.is-active {

@@ -8,8 +8,8 @@
 
 .backpack-header {
     margin-top: 0.5rem;
-    border: 1px solid $ui-black-transparent;
-    background: $ui-white;
+    border: 3px solid $nb-ink;
+    background: $nb-yellow;
     padding: 0.25rem;
     text-align: center;
     font-size: 0.85rem;
@@ -20,11 +20,11 @@
 }
 
 [dir="ltr"] .backpack-header {
-    border-top-right-radius: $space;
+    border-top-right-radius: 0;
 }
 
 [dir="rtl"] .backpack-header {
-    border-top-left-radius: $space;
+    border-top-left-radius: 0;
 }
 
 .backpack-list {
@@ -32,7 +32,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-right: 1px solid $ui-black-transparent;
+    border-right: 3px solid $nb-ink;
+    background: $nb-paper-dark;
     min-height: 5.5rem;
 }
 
@@ -88,12 +89,12 @@
 }
 
 .more {
-    background: $looks-secondary;
-    color: $ui-white;
-    border: none;
+    background: $nb-pink;
+    color: $nb-ink;
+    border: 2px solid $nb-ink;
     outline: none;
     font-weight: bold;
-    border-radius: 0.5rem;
+    border-radius: 0;
     font-size: 0.85rem;
     padding: 0.5rem;
     margin: 0.5rem;

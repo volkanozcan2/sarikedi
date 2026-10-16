@@ -12,20 +12,18 @@ describe('loadConfig', () => {
         expect(config.trustProxy).toBe(false);
         expect(config.staticDir).toBeNull();
         expect(path.isAbsolute(config.dataDir)).toBe(true);
-        expect(config.uploadsDir).toBe(path.join(config.dataDir, 'uploads'));
-        expect(config.seedDir.endsWith(path.join('server', 'seed'))).toBe(true);
+        expect(config.projectsDir).toBe(path.join(config.dataDir, 'projects'));
     });
 
     test('ortam değişkenleri uygulanır', () => {
         const config = loadConfig({
-            PORT: '8080', HOST: '0.0.0.0', DATA_DIR: '/var/lib/sk', STATIC_DIR: '/srv/gui', SEED_DIR: '/srv/seed'
+            PORT: '8080', HOST: '0.0.0.0', DATA_DIR: '/var/lib/sk', STATIC_DIR: '/srv/gui'
         });
         expect(config.port).toBe(8080);
         expect(config.host).toBe('0.0.0.0');
         expect(config.dataDir).toBe('/var/lib/sk');
-        expect(config.uploadsDir).toBe('/var/lib/sk/uploads');
+        expect(config.projectsDir).toBe('/var/lib/sk/projects');
         expect(config.staticDir).toBe('/srv/gui');
-        expect(config.seedDir).toBe('/srv/seed');
     });
 
     test('geçersiz port varsayılana düşer; 0 işletim sistemine bırakılır', () => {

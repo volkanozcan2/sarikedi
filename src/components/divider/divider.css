@@ -1,5 +1,5 @@
 @import "../../css/colors.css";
 
 .divider {
-    border-right: 1px dashed $ui-black-transparent;
+    border-right: 3px solid $nb-ink;
 }

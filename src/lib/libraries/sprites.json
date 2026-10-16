@@ -14752,6 +14752,204 @@
         "blocks": {}
     },
     {
+        "name": "Block-Ç",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "3903d7cc80910e3b51f937658248e95a",
+                "name": "Block-Ç",
+                "bitmapResolution": 1,
+                "md5ext": "3903d7cc80910e3b51f937658248e95a.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 34,
+                "rotationCenterY": 55
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/3903d7cc80910e3b51f937658248e95a.svg"
+    },
+    {
+        "name": "Block-Ğ",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "2b2e5e8c58c4d66b8e73e8b1caa4b793",
+                "name": "Block-Ğ",
+                "bitmapResolution": 1,
+                "md5ext": "2b2e5e8c58c4d66b8e73e8b1caa4b793.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 30,
+                "rotationCenterY": 58
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/2b2e5e8c58c4d66b8e73e8b1caa4b793.svg"
+    },
+    {
+        "name": "Block-İ",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "207c2d34a0655cfec0754e1332eab912",
+                "name": "Block-İ",
+                "bitmapResolution": 1,
+                "md5ext": "207c2d34a0655cfec0754e1332eab912.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 21,
+                "rotationCenterY": 58
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/207c2d34a0655cfec0754e1332eab912.svg"
+    },
+    {
+        "name": "Block-Ö",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "600831ae11b17fa1ff1e62c137f6399b",
+                "name": "Block-Ö",
+                "bitmapResolution": 1,
+                "md5ext": "600831ae11b17fa1ff1e62c137f6399b.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 34,
+                "rotationCenterY": 57
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/600831ae11b17fa1ff1e62c137f6399b.svg"
+    },
+    {
+        "name": "Block-Ş",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "da8240477a5289d424e7492f3d0dae37",
+                "name": "Block-Ş",
+                "bitmapResolution": 1,
+                "md5ext": "da8240477a5289d424e7492f3d0dae37.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 17,
+                "rotationCenterY": 54
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/da8240477a5289d424e7492f3d0dae37.svg"
+    },
+    {
+        "name": "Block-Ü",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "4ca1d533848833e0390041156a632faa",
+                "name": "Block-Ü",
+                "bitmapResolution": 1,
+                "md5ext": "4ca1d533848833e0390041156a632faa.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 29,
+                "rotationCenterY": 57
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/4ca1d533848833e0390041156a632faa.svg"
+    },
+    {
         "name": "Glow-0",
         "tags": [
             "numbers",
@@ -15902,6 +16100,204 @@
             }
         ],
         "blocks": {}
+    },
+    {
+        "name": "Glow-Ç",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "daded8d2527dfbf23502b16c6bfacd0b",
+                "name": "Glow-Ç",
+                "bitmapResolution": 1,
+                "md5ext": "daded8d2527dfbf23502b16c6bfacd0b.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 28,
+                "rotationCenterY": 51
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/daded8d2527dfbf23502b16c6bfacd0b.svg"
+    },
+    {
+        "name": "Glow-Ğ",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "009d3e4cd88d597da2d3106995036fa3",
+                "name": "Glow-Ğ",
+                "bitmapResolution": 1,
+                "md5ext": "009d3e4cd88d597da2d3106995036fa3.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 33,
+                "rotationCenterY": 61
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/009d3e4cd88d597da2d3106995036fa3.svg"
+    },
+    {
+        "name": "Glow-İ",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "c3b4a36a64f7b5b94b2d494f149ab31e",
+                "name": "Glow-İ",
+                "bitmapResolution": 1,
+                "md5ext": "c3b4a36a64f7b5b94b2d494f149ab31e.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 22,
+                "rotationCenterY": 58
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/c3b4a36a64f7b5b94b2d494f149ab31e.svg"
+    },
+    {
+        "name": "Glow-Ö",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "3e1f2c70a07b349914e5527e69b1abb1",
+                "name": "Glow-Ö",
+                "bitmapResolution": 1,
+                "md5ext": "3e1f2c70a07b349914e5527e69b1abb1.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 30,
+                "rotationCenterY": 60
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/3e1f2c70a07b349914e5527e69b1abb1.svg"
+    },
+    {
+        "name": "Glow-Ş",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "27c8b0e11d171e811994d6c5633cf476",
+                "name": "Glow-Ş",
+                "bitmapResolution": 1,
+                "md5ext": "27c8b0e11d171e811994d6c5633cf476.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 28,
+                "rotationCenterY": 59
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/27c8b0e11d171e811994d6c5633cf476.svg"
+    },
+    {
+        "name": "Glow-Ü",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "c0abbe49ed80ecf19fe039f9051476e8",
+                "name": "Glow-Ü",
+                "bitmapResolution": 1,
+                "md5ext": "c0abbe49ed80ecf19fe039f9051476e8.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 38,
+                "rotationCenterY": 58
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/c0abbe49ed80ecf19fe039f9051476e8.svg"
     },
     {
         "name": "Story-A",
@@ -17202,5 +17598,203 @@
             }
         ],
         "blocks": {}
+    },
+    {
+        "name": "Story-Ç",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "a2d6a85254f833b8adfa0da9e3f124e7",
+                "name": "Story-Ç",
+                "bitmapResolution": 1,
+                "md5ext": "a2d6a85254f833b8adfa0da9e3f124e7.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 23,
+                "rotationCenterY": 36
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/a2d6a85254f833b8adfa0da9e3f124e7.svg"
+    },
+    {
+        "name": "Story-Ğ",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "4e17824d3df2a5bae6218f5b1bc647f0",
+                "name": "Story-Ğ",
+                "bitmapResolution": 1,
+                "md5ext": "4e17824d3df2a5bae6218f5b1bc647f0.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 24,
+                "rotationCenterY": 36
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/4e17824d3df2a5bae6218f5b1bc647f0.svg"
+    },
+    {
+        "name": "Story-İ",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "a52978de5e6197c11a24391de6afda46",
+                "name": "Story-İ",
+                "bitmapResolution": 1,
+                "md5ext": "a52978de5e6197c11a24391de6afda46.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 10,
+                "rotationCenterY": 37
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/a52978de5e6197c11a24391de6afda46.svg"
+    },
+    {
+        "name": "Story-Ö",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "3622eec0e4ae3103e7ed52fdb652d0be",
+                "name": "Story-Ö",
+                "bitmapResolution": 1,
+                "md5ext": "3622eec0e4ae3103e7ed52fdb652d0be.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 25,
+                "rotationCenterY": 35
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/3622eec0e4ae3103e7ed52fdb652d0be.svg"
+    },
+    {
+        "name": "Story-Ş",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "69cc3caea3dae2d1974515451d7e176d",
+                "name": "Story-Ş",
+                "bitmapResolution": 1,
+                "md5ext": "69cc3caea3dae2d1974515451d7e176d.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 17,
+                "rotationCenterY": 35
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/69cc3caea3dae2d1974515451d7e176d.svg"
+    },
+    {
+        "name": "Story-Ü",
+        "tags": [
+            "alphabet",
+            "letters"
+        ],
+        "isStage": false,
+        "variables": {},
+        "costumes": [
+            {
+                "assetId": "aaed7519dc44585745ffe9d0d5e02fe6",
+                "name": "Story-Ü",
+                "bitmapResolution": 1,
+                "md5ext": "aaed7519dc44585745ffe9d0d5e02fe6.svg",
+                "dataFormat": "svg",
+                "rotationCenterX": 25,
+                "rotationCenterY": 36
+            }
+        ],
+        "sounds": [
+            {
+                "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                "name": "meow",
+                "dataFormat": "wav",
+                "format": "",
+                "rate": 44100,
+                "sampleCount": 37376,
+                "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+            }
+        ],
+        "blocks": {},
+        "rawURL": "static/tr-letters/aaed7519dc44585745ffe9d0d5e02fe6.svg"
     }
 ]

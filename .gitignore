@@ -30,7 +30,3 @@ npm-*
 # Server
 /server/node_modules
 /server/data
-
-# Gizli bilgiler ve yerel dosyalar
-.env
-.env.*

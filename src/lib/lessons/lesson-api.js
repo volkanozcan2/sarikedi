@@ -1,78 +1,59 @@
 /**
- * @fileoverview
- * Ders listesi ve derslerin alınması. Sunucudan gelen her şey doğrulanır.
+ * Rehberli ders API'sinin (/api/lessons) istemcisi. Hesap API'sinin hata biçimini kullanır.
  */
+import {AccountApiError} from '../accounts/account-api';
 
-import queryString from 'query-string';
-import {LEVELS, isSafeUrl, validateLesson} from './schema';
-import {SAMPLE_LESSONS} from './sample-lessons';
-
-const isSampleMode = search => queryString.parse(search || '').lessons === 'sample';
-
-const byOrder = (a, b) => a.order - b.order;
-
-const summarize = lesson => ({
-    id: lesson.id,
-    title: lesson.title,
-    description: lesson.description,
-    level: lesson.level,
-    cover: lesson.cover || null,
-    order: lesson.order,
-    stepCount: lesson.steps.length
-});
-
-const isSummary = item => item !== null && typeof item === 'object' &&
-    typeof item.id === 'string' && typeof item.title === 'string' &&
-    LEVELS.indexOf(item.level) !== -1 && Number.isInteger(item.stepCount) &&
-    Number.isInteger(item.order);
-
-const cleanSummary = item => ({
-    id: item.id,
-    title: item.title,
-    description: typeof item.description === 'string' ? item.description : '',
-    level: item.level,
-    cover: isSafeUrl(item.cover) ? item.cover : null,
-    order: item.order,
-    stepCount: item.stepCount
-});
-
-const createLessonApi = ({fetchFn, baseUrl = '/api', sample = false} = {}) => {
-    const getJson = path => fetchFn(`${baseUrl}${path}`)
-        .catch(() => {
-            throw new Error('Dersler şu an yüklenemedi');
-        })
-        .then(response => {
-            if (!response.ok) throw new Error(`Dersler yüklenemedi (${response.status})`);
-            return response.json();
-        });
-
-    if (sample) {
-        return {
-            listLessons: () => Promise.resolve(SAMPLE_LESSONS.map(summarize).sort(byOrder)),
-            getLesson: id => {
-                const found = SAMPLE_LESSONS.filter(lesson => lesson.id === id)[0];
-                return found ? Promise.resolve(found) : Promise.reject(new Error('Ders bulunamadı'));
+const createLessonApi = ({fetchFn, baseUrl = '/api/lessons'}) => {
+    const call = (method, path, body, kind) => {
+        const options = {method: method, credentials: 'same-origin', headers: {}};
+        if (typeof body !== 'undefined') {
+            if (kind === 'raw') {
+                options.headers['Content-Type'] = 'application/octet-stream';
+                options.body = body;
+            } else {
+                options.headers['Content-Type'] = 'application/json';
+                options.body = JSON.stringify(body);
             }
-        };
-    }
-
+        }
+        return fetchFn(`${baseUrl}${path}`, options)
+            .catch(() => {
+                throw new AccountApiError('Sunucuya ulaşılamadı', 0);
+            })
+            .then(response => {
+                if (response.status === 204) return null;
+                return response.json().catch(() => ({}))
+                    .then(data => {
+                        if (!response.ok) {
+                            const detail = data.errors && data.errors.length ? `: ${data.errors.join(', ')}` : '';
+                            const message = data.error || `İstek başarısız (${response.status})`;
+                            throw new AccountApiError(`${message}${detail}`, response.status, data);
+                        }
+                        return data;
+                    });
+            });
+    };
+    const fields = draft => ({
+        title: draft.title,
+        description: draft.description || '',
+        classId: draft.classId || null,
+        steps: draft.steps
+    });
     return {
-        listLessons: () => getJson('/lessons').then(list => {
-            if (!Array.isArray(list)) throw new Error('Ders listesi geçersiz');
-            return list
-                .filter(isSummary)
-                .map(cleanSummary)
-                .sort(byOrder);
-        }),
-        getLesson: id => getJson(`/lessons/${encodeURIComponent(id)}`).then(lesson => {
-            const result = validateLesson(lesson);
-            if (!result.valid) throw new Error(`Ders verisi geçersiz: ${result.errors[0]}`);
-            return lesson;
-        })
+        list: () => call('GET', ''),
+        get: id => call('GET', `/${id}`),
+        create: draft => call('POST', '', fields(draft)),
+        update: (id, draft) => call('PUT', `/${id}`, fields(draft)),
+        uploadProject: (id, blob) => call('PUT', `/${id}/file`, blob, 'raw'),
+        remove: id => call('DELETE', `/${id}`),
+        download: id => fetchFn(`${baseUrl}/${id}/file`, {credentials: 'same-origin'})
+            .catch(() => {
+                throw new AccountApiError('Sunucuya ulaşılamadı', 0);
+            })
+            .then(response => {
+                if (!response.ok) throw new AccountApiError('Ders projesi indirilemedi', response.status);
+                return response.arrayBuffer();
+            })
     };
 };
 
-export {
-    isSampleMode,
-    createLessonApi
-};
+export {createLessonApi};

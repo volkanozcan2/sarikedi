@@ -12,8 +12,15 @@ const MODAL_SPRITE_LIBRARY = 'spriteLibrary';
 const MODAL_SOUND_RECORDER = 'soundRecorder';
 const MODAL_CONNECTION = 'connectionModal';
 const MODAL_TIPS_LIBRARY = 'tipsLibrary';
-const MODAL_LESSONS_LIBRARY = 'lessonsLibrary';
 const MODAL_ABOUT = 'aboutModal';
+const MODAL_ACCOUNT_LOGIN = 'accountLogin';
+const MODAL_ACCOUNT_REGISTER = 'accountRegister';
+const MODAL_TEACHER_PANEL = 'teacherPanel';
+const MODAL_SAVE_PROJECT = 'saveProject';
+const MODAL_MY_PROJECTS = 'myProjects';
+const MODAL_SHARED_GALLERY = 'sharedGallery';
+const MODAL_QUICK_SHARE = 'quickShare';
+const MODAL_LESSONS = 'lessonsGallery';
 
 const initialState = {
     [MODAL_BACKDROP_LIBRARY]: false,
@@ -27,8 +34,15 @@ const initialState = {
     [MODAL_SOUND_RECORDER]: false,
     [MODAL_CONNECTION]: false,
     [MODAL_TIPS_LIBRARY]: false,
-    [MODAL_LESSONS_LIBRARY]: false,
-    [MODAL_ABOUT]: false
+    [MODAL_ABOUT]: false,
+    [MODAL_ACCOUNT_LOGIN]: false,
+    [MODAL_ACCOUNT_REGISTER]: false,
+    [MODAL_TEACHER_PANEL]: false,
+    [MODAL_SAVE_PROJECT]: false,
+    [MODAL_MY_PROJECTS]: false,
+    [MODAL_SHARED_GALLERY]: false,
+    [MODAL_QUICK_SHARE]: false,
+    [MODAL_LESSONS]: false
 };
 
 const reducer = function (state, action) {
@@ -121,17 +135,59 @@ const closeSoundRecorder = function () {
 const closeTipsLibrary = function () {
     return closeModal(MODAL_TIPS_LIBRARY);
 };
-const openLessonsLibrary = function () {
-    return openModal(MODAL_LESSONS_LIBRARY);
-};
-const closeLessonsLibrary = function () {
-    return closeModal(MODAL_LESSONS_LIBRARY);
-};
 const openAboutModal = function () {
     return openModal(MODAL_ABOUT);
 };
 const closeAboutModal = function () {
     return closeModal(MODAL_ABOUT);
+};
+const openLoginModal = function () {
+    return openModal(MODAL_ACCOUNT_LOGIN);
+};
+const closeLoginModal = function () {
+    return closeModal(MODAL_ACCOUNT_LOGIN);
+};
+const openRegisterModal = function () {
+    return openModal(MODAL_ACCOUNT_REGISTER);
+};
+const closeRegisterModal = function () {
+    return closeModal(MODAL_ACCOUNT_REGISTER);
+};
+const openTeacherPanel = function () {
+    return openModal(MODAL_TEACHER_PANEL);
+};
+const closeTeacherPanel = function () {
+    return closeModal(MODAL_TEACHER_PANEL);
+};
+const openSaveProject = function () {
+    return openModal(MODAL_SAVE_PROJECT);
+};
+const closeSaveProject = function () {
+    return closeModal(MODAL_SAVE_PROJECT);
+};
+const openMyProjects = function () {
+    return openModal(MODAL_MY_PROJECTS);
+};
+const closeMyProjects = function () {
+    return closeModal(MODAL_MY_PROJECTS);
+};
+const openSharedGallery = function () {
+    return openModal(MODAL_SHARED_GALLERY);
+};
+const closeSharedGallery = function () {
+    return closeModal(MODAL_SHARED_GALLERY);
+};
+const openQuickShare = function () {
+    return openModal(MODAL_QUICK_SHARE);
+};
+const closeQuickShare = function () {
+    return closeModal(MODAL_QUICK_SHARE);
+};
+const openLessonsGallery = function () {
+    return openModal(MODAL_LESSONS);
+};
+const closeLessonsGallery = function () {
+    return closeModal(MODAL_LESSONS);
 };
 const closeConnectionModal = function () {
     return closeModal(MODAL_CONNECTION);
@@ -150,8 +206,16 @@ export {
     openTelemetryModal,
     openTipsLibrary,
     openConnectionModal,
-    openLessonsLibrary,
     openAboutModal,
+    openLoginModal,
+    openRegisterModal,
+    openTeacherPanel,
+    openSaveProject,
+    openMyProjects,
+    openSharedGallery,
+    openQuickShare,
+    openLessonsGallery,
+    closeLessonsGallery,
     closeBackdropLibrary,
     closeCostumeLibrary,
     closeDebugModal,
@@ -163,6 +227,12 @@ export {
     closeTelemetryModal,
     closeTipsLibrary,
     closeConnectionModal,
-    closeLessonsLibrary,
-    closeAboutModal
+    closeAboutModal,
+    closeLoginModal,
+    closeRegisterModal,
+    closeTeacherPanel,
+    closeSaveProject,
+    closeMyProjects,
+    closeSharedGallery,
+    closeQuickShare
 };

@@ -5,8 +5,6 @@ import classNames from 'classnames';
 
 import Box from '../box/box.jsx';
 import ReactModal from 'react-modal';
-import deleteIcon from './icon--delete.svg';
-import undoIcon from './icon--undo.svg';
 import arrowLeftIcon from './icon--arrow-left.svg';
 import arrowRightIcon from './icon--arrow-right.svg';
 
@@ -137,10 +135,6 @@ const DeleteConfirmationPrompt = ({
                         onClick={onOk}
                         role="button"
                     >
-                        <img
-                            className={styles.deleteIcon}
-                            src={deleteIcon}
-                        />
                         <div className={styles.message}>
                             <FormattedMessage {...messages.confirmOption} />
                         </div>
@@ -150,10 +144,6 @@ const DeleteConfirmationPrompt = ({
                         onClick={onCancel}
                         role="button"
                     >
-                        <img
-                            className={styles.deleteIcon}
-                            src={undoIcon}
-                        />
                         <div className={styles.message}>
                             <FormattedMessage {...messages.cancelOption} />
                         </div>

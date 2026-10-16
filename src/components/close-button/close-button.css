@@ -7,17 +7,26 @@
     justify-content: center;
 
     overflow: hidden;  /* Mask the icon animation */
-    background-color: $ui-black-transparent;
+    background-color: $ui-white;
+    border: 3px solid $nb-ink;
     border-radius: 50%;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    box-shadow: 2px 2px 0 $nb-shadow;
+    font-family: $font-body;
     user-select: none;
     cursor: pointer;
-    transition: all 0.15s ease-out;
+    transition: translate 0.08s linear, box-shadow 0.08s linear, background-color 0.08s linear;
 }
 
 .close-button.large:hover {
-    transform: scale(1.1, 1.1);
-    box-shadow: 0 0 0 4px $ui-black-transparent;
+    background-color: $nb-pink;
+    translate: -1px -1px;
+    box-shadow: 3px 3px 0 $nb-shadow;
+}
+
+.close-button.large:active {
+    background-color: $nb-cyan;
+    translate: 2px 2px;
+    box-shadow: none;
 }
 
 .close-button.large.orange:hover {
@@ -28,14 +37,13 @@
 .small {
     width: 0.825rem;
     height: 0.825rem;
-    background-color: $looks-secondary;
-    color: $ui-white;
+    background-color: $nb-pink;
+    color: $nb-ink;
 }
 
 .large {
     width: 1.75rem;
     height: 1.75rem;
-    box-shadow: 0 0 0 2px $ui-black-transparent;
 }
 
  .large.orange {
@@ -49,6 +57,7 @@
     user-select: none;
     transform-origin: 50%;
     transform: rotate(45deg);
+    filter: $nb-ink-filter;
 }
 
 .close-icon.orange {

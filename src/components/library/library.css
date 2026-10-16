@@ -11,7 +11,7 @@
     flex-wrap: wrap;
     overflow-y: auto;
     height: auto;
-    padding: 0.5rem;
+    padding: 0.75rem;
     height: calc(100% - $library-header-height);
 }
 
@@ -26,6 +26,7 @@
 
 .library-category-title {
   padding-Left: .5rem;
+  font-family: $font-heading;
   font-weight: bold;
   font-size: 2rem;
   color: $text-primary;
@@ -43,7 +44,8 @@
     justify-content: flex-start;
     align-items: center;
     height: calc($library-filter-bar-height + 2rem); /* padding */
-    background-color: $looks-transparent;
+    background-color: $nb-lilac;
+    border-bottom: $nb-border-width solid $nb-ink;
     padding: 0 1rem;
     font-size: .875rem;
 }
@@ -67,7 +69,7 @@
 }
 
 .divider {
-    transform: scaleY(1.39);
+    transform: none;
     height: $library-filter-bar-height;
 }
 

@@ -18,11 +18,11 @@ $more-button-size: 2.25rem;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background: $looks-secondary;
+    font-family: $font-body;
+    background: $nb-yellow;
     outline: none;
-    border: none;
-    transition: background-color 0.2s;
+    border: 3px solid $nb-ink;
+    transition: background-color 0.08s linear, translate 0.08s linear, box-shadow 0.08s linear;
 }
 
 button::-moz-focus-inner {
@@ -30,11 +30,12 @@ button::-moz-focus-inner {
 }
 
 .button:hover {
-    background: $extensions-primary;
+    background: $nb-pink;
 }
 
 .button:active {
     padding: inherit;
+    background: $nb-cyan;
 }
 
 .button.coming-soon:hover {
@@ -45,17 +46,22 @@ button::-moz-focus-inner {
     border-radius: 100%;
     width: $main-button-size;
     height: $main-button-size;
-    box-shadow: 0 0 0 4px $looks-transparent;
+    box-shadow: 4px 4px 0 $nb-ink;
     z-index: $z-index-add-button;
-    transition: transform, box-shadow 0.5s;
 }
 
 .main-button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 0 6px $looks-transparent;
+    translate: -2px -2px;
+    box-shadow: 6px 6px 0 $nb-ink;
+}
+
+.main-button:active {
+    translate: 4px 4px;
+    box-shadow: 0 0 0 $nb-ink;
 }
 
 .main-icon {
+    filter: $nb-ink-filter;
     width: calc($main-button-size - 1rem);
     height: calc($main-button-size - 1rem);
 }
@@ -65,16 +71,8 @@ button::-moz-focus-inner {
 }
 
 .more-buttons-outer {
-    /*
-        Need to use two divs to set different overflow x/y
-        which is needed to get animation to look right while
-        allowing the tooltips to be visible.
-    */
-    overflow-y: hidden;
-
-    background: $looks-secondary-dark;
-    border-top-left-radius: $more-button-size;
-    border-top-right-radius: $more-button-size;
+    /* Seçenekler ayrı yuvarlak düğmeler olarak ana düğmenin üstünde belirir. */
+    overflow: visible;
     width: $more-button-size;
     margin-left: calc(($main-button-size - $more-button-size) / 2);
     margin-right: calc(($main-button-size - $more-button-size) / 2);
@@ -84,41 +82,80 @@ button::-moz-focus-inner {
 
     margin-bottom: calc($main-button-size / -2);
     padding-bottom: calc($main-button-size / 2);
+
+    /* kapalıyken fare olaylarını yakalamasın */
+    pointer-events: none;
+}
+
+.expanded .more-buttons-outer {
+    pointer-events: auto;
 }
 
 .more-buttons {
-    max-height: 0;
-    transition: max-height 1s;
-    overflow-x: visible;
     display: flex;
     flex-direction: column;
+    gap: 0.7rem;
+    padding-bottom: 0.7rem;
     z-index: 10; /* @todo justify */
 }
 
+/* ana düğmeye yakın olandan başlayarak sıra numarası (animasyon gecikmesi ve başlangıç uzaklığı için) */
+.more-buttons > div:nth-last-child(1) { --i: 1; }
+.more-buttons > div:nth-last-child(2) { --i: 2; }
+.more-buttons > div:nth-last-child(3) { --i: 3; }
+.more-buttons > div:nth-last-child(4) { --i: 4; }
+.more-buttons > div:nth-last-child(5) { --i: 5; }
+.more-buttons > div:nth-last-child(6) { --i: 6; }
+
 .file-input {
     display: none;
-}
-
-.expanded .more-buttons {
-    max-height: 1000px; /* Arbitrary, needs to be a value in order for animation to run */
 }
 
 .force-hidden .more-buttons {
     display: none; /* This property does not animate */
 }
 
-.more-buttons:first-child { /* Round off top button */
-    border-top-right-radius: $more-button-size;
-    border-top-left-radius: $more-button-size;
-}
-
 .more-button {
     width: $more-button-size;
     height: $more-button-size;
-    background: $looks-secondary-dark;
+    border-radius: 50%;
+    background: $ui-white;
+    box-shadow: 3px 3px 0 $nb-ink;
+
+    /* kapalı hâl: ana düğmenin içinden küçük ve saydam başlar */
+    opacity: 0;
+    scale: 0.2;
+    translate: 0 calc(var(--i, 1) * 2.95rem + 0.4rem);
+    transition:
+        opacity 0.14s linear,
+        scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+        translate 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background-color 0.08s linear,
+        box-shadow 0.08s linear;
+}
+
+.expanded .more-button {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+    transition-delay: calc(var(--i, 1) * 45ms), calc(var(--i, 1) * 45ms), calc(var(--i, 1) * 45ms), 0s, 0s;
+}
+
+.expanded .more-button:hover {
+    background: $nb-pink;
+    scale: 1.12;
+    box-shadow: 4px 4px 0 $nb-ink;
+    transition-delay: 0s;
+}
+
+.expanded .more-button:active {
+    background: $nb-cyan;
+    scale: 0.95;
+    box-shadow: 0 0 0 $nb-ink;
 }
 
 .more-icon {
+    filter: $nb-ink-filter;
     width: calc($more-button-size - 1rem);
     height: calc($more-button-size - 1rem);
 }
@@ -133,19 +170,28 @@ button::-moz-focus-inner {
     is not very easy to style.
 */
 .tooltip {
-    background-color: $extensions-primary !important;
+    background-color: $nb-ink !important;
+    color: $nb-yellow !important;
     opacity: 1 !important;
-    border: 1px solid hsla(0, 0%, 0%, .1) !important;
-    box-shadow: 0 0 .5rem hsla(0, 0%, 0%, .25) !important;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: 4px 4px 0 $nb-pink !important;
+    font-family: $font-body !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
 }
 
 .tooltip:after {
-    background-color: $extensions-primary;
+    background-color: $nb-ink;
+    border-top-color: $nb-ink !important;
+    border-bottom-color: $nb-ink !important;
+    border-left-color: $nb-ink !important;
+    border-right-color: $nb-ink !important;
 }
 
 .coming-soon-tooltip {
-    background-color: $data-primary !important;
+    background-color: $nb-ink !important;
+    color: $nb-yellow !important;
 }
 
 .coming-soon-tooltip:after {
@@ -153,10 +199,6 @@ button::-moz-focus-inner {
 }
 
 .tooltip {
-    border: 1px solid hsla(0, 0%, 0%, .1) !important;
-    border-radius: $form-radius !important;
-    box-shadow: 0 0 .5rem hsla(0, 0%, 0%, .25) !important;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     z-index: $z-index-tooltip !important;
 }
 

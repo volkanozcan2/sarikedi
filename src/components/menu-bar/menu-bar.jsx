@@ -17,10 +17,15 @@ import MenuBarMenu from './menu-bar-menu.jsx';
 import {MenuItem, MenuSection} from '../menu/menu.jsx';
 import SB3Downloader from '../../containers/sb3-downloader.jsx';
 import DeletionRestorer from '../../containers/deletion-restorer.jsx';
+import PerformanceSettings from '../../containers/performance-settings.jsx';
 import TurboMode from '../../containers/turbo-mode.jsx';
+import UiSoundsToggle from '../../containers/ui-sounds-toggle.jsx';
 import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
 
-import {openTipsLibrary, openDebugModal, openLessonsLibrary, openAboutModal} from '../../reducers/modals';
+import {
+    openTipsLibrary, openDebugModal, openAboutModal, openSaveProject, openMyProjects,
+    openSharedGallery, openQuickShare, openLessonsGallery
+} from '../../reducers/modals';
 import {setPlayer} from '../../reducers/mode';
 import {
     isTimeTravel220022BC,
@@ -68,7 +73,11 @@ import dropdownCaret from './dropdown-caret.svg';
 import aboutIcon from './icon--about.svg';
 import fileIcon from './icon--file.svg';
 import editIcon from './icon--edit.svg';
+import sharedIcon from './icon--shared.svg';
 import lessonsIcon from './icon--lessons.svg';
+import shareNowIcon from './icon--share-now.svg';
+import AccountMenu from '../../containers/account-menu.jsx';
+import {setCloudProject} from '../../reducers/account';
 
 import scratchLogo from './sarikedi-logo.png';
 import ninetiesLogo from './nineties_logo.svg';
@@ -150,6 +159,9 @@ class MenuBar extends React.Component {
         super(props);
         bindAll(this, [
             'handleClickNew',
+            'handleClickLoadFromComputer',
+            'handleClickSaveToAccount',
+            'handleClickMyProjects',
             'handleClickRemix',
             'handleClickSave',
             'handleClickSaveAsCopy',
@@ -168,6 +180,19 @@ class MenuBar extends React.Component {
     componentWillUnmount () {
         document.removeEventListener('keydown', this.handleKeyPress);
     }
+    handleClickLoadFromComputer () {
+        // bilgisayardan açılan proje hesaptaki projenin üzerine yazılmasın
+        this.props.onDetachCloudProject();
+        this.props.onStartSelectingFileUpload();
+    }
+    handleClickSaveToAccount () {
+        this.props.onRequestCloseFile();
+        this.props.onOpenSaveProject();
+    }
+    handleClickMyProjects () {
+        this.props.onRequestCloseFile();
+        this.props.onOpenMyProjects();
+    }
     handleClickNew () {
         // if the project is dirty, and user owns the project, we will autosave.
         // but if they are not logged in and can't save, user should consider
@@ -179,6 +204,7 @@ class MenuBar extends React.Component {
         );
         this.props.onRequestCloseFile();
         if (readyToReplaceProject) {
+            this.props.onDetachCloudProject();
             this.props.onClickNew(this.props.canSave && this.props.canCreateNew);
         }
         this.props.onRequestCloseFile();
@@ -447,9 +473,19 @@ class MenuBar extends React.Component {
                                             )}
                                         </MenuSection>
                                     )}
+                                    {this.props.accountUser && (
+                                        <MenuSection>
+                                            <MenuItem onClick={this.handleClickSaveToAccount}>
+                                                {'Hesabıma kaydet'}
+                                            </MenuItem>
+                                            <MenuItem onClick={this.handleClickMyProjects}>
+                                                {'Projelerim'}
+                                            </MenuItem>
+                                        </MenuSection>
+                                    )}
                                     <MenuSection>
                                         <MenuItem
-                                            onClick={this.props.onStartSelectingFileUpload}
+                                            onClick={this.handleClickLoadFromComputer}
                                         >
                                             {this.props.intl.formatMessage(sharedMessages.loadFromComputerTitle)}
                                         </MenuItem>
@@ -516,23 +552,50 @@ class MenuBar extends React.Component {
                                             )}
                                         </MenuItem>
                                     )}</TurboMode>
+                                    <PerformanceSettings>{(settings, {onFps60, onInterpolation}) => (
+                                        <React.Fragment>
+                                            <MenuItem onClick={onFps60}>
+                                                {settings.fps60 ? '✓ 60 FPS' : '60 FPS'}
+                                            </MenuItem>
+                                            <MenuItem onClick={onInterpolation}>
+                                                {settings.interpolation ?
+                                                    '✓ Akıcı hareket (ara değer)' : 'Akıcı hareket (ara değer)'}
+                                            </MenuItem>
+                                        </React.Fragment>
+                                    )}</PerformanceSettings>
+                                    <UiSoundsToggle>{(soundsOn, onToggleSounds) => (
+                                        <MenuItem onClick={onToggleSounds}>
+                                            {soundsOn ? '✓ Arayüz sesleri' : 'Arayüz sesleri'}
+                                        </MenuItem>
+                                    )}</UiSoundsToggle>
                                 </MenuSection>
                             </MenuBarMenu>
 
                         </div>
                         <div
                             className={classNames(styles.menuBarItem, styles.hoverable)}
+                            onMouseUp={this.props.onOpenShared}
+                        >
+                            <img src={sharedIcon} />
+                            <span className={styles.collapsibleLabel}>{'Paylaşılanlar'}</span>
+                        </div>
+                        <div
+                            className={classNames(styles.menuBarItem, styles.hoverable)}
                             onMouseUp={this.props.onOpenLessons}
                         >
                             <img src={lessonsIcon} />
-                            <span className={styles.collapsibleLabel}>
-                                <FormattedMessage
-                                    defaultMessage="Dersler"
-                                    description="Menu bar item for opening the lessons library"
-                                    id="gui.menuBar.lessons"
-                                />
-                            </span>
+                            <span className={styles.collapsibleLabel}>{'Dersler'}</span>
                         </div>
+                        {this.props.accountUser ? (
+                            <div
+                                className={classNames(styles.menuBarItem, styles.hoverable)}
+                                onMouseUp={this.props.onQuickShare}
+                            >
+                                <img src={shareNowIcon} />
+                                <span className={styles.collapsibleLabel}>{'Paylaş'}</span>
+                            </div>
+                        ) : null}
+                        <AccountMenu />
                         {this.props.isTotallyNormal && (
                             <div
                                 className={classNames(styles.menuBarItem, styles.hoverable, {
@@ -604,6 +667,7 @@ MenuBar.propTypes = {
     autoUpdateProject: PropTypes.func,
     canCreateCopy: PropTypes.bool,
     canCreateNew: PropTypes.bool,
+    accountUser: PropTypes.shape({role: PropTypes.string}),
     canManageFiles: PropTypes.bool,
     canRemix: PropTypes.bool,
     canSave: PropTypes.bool,
@@ -638,7 +702,12 @@ MenuBar.propTypes = {
     onClickRemix: PropTypes.func,
     onClickSave: PropTypes.func,
     onClickSaveAsCopy: PropTypes.func,
+    onDetachCloudProject: PropTypes.func,
+    onOpenMyProjects: PropTypes.func,
     onOpenLessons: PropTypes.func,
+    onOpenShared: PropTypes.func,
+    onQuickShare: PropTypes.func,
+    onOpenSaveProject: PropTypes.func,
     onProjectTelemetryEvent: PropTypes.func,
     onRequestCloseAbout: PropTypes.func,
     onRequestCloseEdit: PropTypes.func,
@@ -667,6 +736,7 @@ const mapStateToProps = (state, ownProps) => {
         currentLocale: state.locales.locale,
         fileMenuOpen: fileMenuOpen(state),
         editMenuOpen: editMenuOpen(state),
+        accountUser: state.scratchGui.account.user,
         isRtl: state.locales.isRtl,
         isUpdating: getIsUpdating(loadingState),
         isShowingProject: getIsShowingProject(loadingState),
@@ -692,7 +762,12 @@ const mapDispatchToProps = dispatch => ({
     onOpenTipLibrary: () => dispatch(openTipsLibrary()),
     onOpenDebugModal: () => dispatch(openDebugModal()),
     onOpenAbout: () => dispatch(openAboutModal()),
-    onOpenLessons: () => dispatch(openLessonsLibrary()),
+    onDetachCloudProject: () => dispatch(setCloudProject(null)),
+    onOpenMyProjects: () => dispatch(openMyProjects()),
+    onOpenLessons: () => dispatch(openLessonsGallery()),
+    onOpenShared: () => dispatch(openSharedGallery()),
+    onQuickShare: () => dispatch(openQuickShare()),
+    onOpenSaveProject: () => dispatch(openSaveProject()),
     onClickAccount: () => dispatch(openAccountMenu()),
     onRequestCloseAccount: () => dispatch(closeAccountMenu()),
     onClickFile: () => dispatch(openFileMenu()),

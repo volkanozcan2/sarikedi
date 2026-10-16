@@ -1,8 +1,8 @@
 # SARIKEDİ
 
 Scratch 3 editörünün Türkçe açılan, derslerle birlikte gelen hali. Öğretmenlerin ve öğrencilerin Scratch ile
-oyun yapmayı adım adım öğrenebilmesi için hazırladım. Sağ altta bir ders paneli açılıyor, hangi bloğu nereye
-koyacağını el imleciyle gösteriyor ve öğrenci doğru yaptığında adımı kendisi geçiyor.
+oyun yapmayı adım adım öğrenebilmesi için hazırladım. Ders açılınca altta bir adım kartı çıkıyor, bir el hangi
+düğmeye basacağını, hangi bloğu nereye koyacağını gösteriyor ve öğrenci doğru yaptığında adım kendiliğinden geçiyor.
 
 Canlı hali: https://sarıkedi.com
 
@@ -10,10 +10,12 @@ Bu proje [scratch-gui](https://github.com/scratchfoundation/scratch-gui) üzerin
 koduna dokunmadığım yerler olduğu gibi duruyor, benim eklediklerim şunlar:
 
 - Varsayılan dil Türkçe, menü ve logo SARIKEDİ'ye göre değişti, varsayılan kukla "Cool Cat"
-- **Dersler** menüsü ve ders oynatıcı (adım adım rehber, blok kontrolü, ilerleme tarayıcıda saklanır)
-- Dersleri saklayan küçük bir Node.js sunucusu (`server/`, SQLite)
-- Tarayıcıdan ders yazmaya yarayan yönetici paneli (`/?author`)
-- 12 hazır ders: yıldız yakalama, labirent, pong, platform oyunu ve diğerleri (`server/seed/`)
+- **Dersler** menüsü: öğretmen editörde yaptıklarını kaydederek ders hazırlıyor, öğrenci de aynı adımları el
+  rehberiyle kendisi yapıyor
+- Öğretmen ve öğrenci hesapları, sınıflar, projeyi hesaba kaydetme ve sınıfla paylaşma
+- Bunları saklayan küçük bir Node.js sunucusu (`server/`, SQLite)
+- Hazır bir ders: arayüzü baştan sona gezdiren "SARIKEDİ'yi tanıyalım" (`server/builtin-lessons/`)
+- Yeni görünüm, arayüz sesleri, Türkçe harf kuklaları ve açılış ekranı
 
 ## Neler gerekiyor
 
@@ -56,7 +58,8 @@ koduna dokunmadığım yerler olduğu gibi duruyor, benim eklediklerim şunlar:
    ADMIN_PASSWORD_HASH='scrypt:...' SESSION_SECRET="$(openssl rand -hex 32)" node src/index.js
    ```
 
-   Sunucu `http://127.0.0.1:3001` adresinde açılır. İlk açılışta 12 hazır dersi veritabanına ekler.
+   Sunucu `http://127.0.0.1:3001` adresinde açılır. Açılışta `server/builtin-lessons/` klasöründeki hazır
+   dersleri veritabanına ekler.
 
 6. Başka bir terminal açıp editörü başlat (proje klasöründe):
 
@@ -67,17 +70,16 @@ koduna dokunmadığım yerler olduğu gibi duruyor, benim eklediklerim şunlar:
    Tarayıcıda `http://localhost:8601` adresini aç. Menüdeki **Dersler** düğmesinden bir ders seçebilirsin.
 
 7. Yönetici paneli için `http://localhost:8601/?author` adresine git, sağ üstteki **Yönetici** düğmesine bas ve 4.
-   adımda belirlediğin şifreyle giriş yap.
+   adımda belirlediğin şifreyle giriş yap. Panelde öğretmen hesaplarını onaylarsın.
 
-## Yönetici panelinde neler yapılır
+## Ders hazırlamak
 
-- Ders ekleme, düzenleme, sıralama, silme ve yayına alma ("Gizli" olan dersler menüde görünmez)
-- Dersi oyunu yaparak kaydetme: **Kaydı başlat**'a bas, oyunu Scratch'te yap, her adım bitince **Adımı kaydet**'e bas.
-  Eklenen bloklar, kukla/dekor/kostüm/ses eklemeleri ve kukla seçimleri adım olur
-- Hazır bir `.sb3` dosyasını derse çevirme: kuklalar ve sesler başlangıç projesi olur, bloklar adım adım bölünür
-- Adım metni, ipucu, görsel, el rehberi ve kontrolleri elle düzenleme
-
-Kaydettiğin dersin menüde görünmesi için **Yayında** kutusunu işaretlemeyi unutma.
+1. Sitede öğretmen olarak kaydol, yönetici panelinden hesabını onayla.
+2. Menüde **Dersler**'e gir, **Yeni ders kaydet**'e bas. O an açık olan proje dersin başlangıcı olur.
+3. Editörde normal çalış: blok koy, değer değiştir, kukla/dekor/ses/eklenti ekle, sekme değiştir. Hepsi adım adım
+   kaydedilir. Üstteki şeritten not da ekleyebilirsin.
+4. **Bitir**'e basınca adımların listesi açılır. Metinleri değiştir, sırayı düzenle, gereksiz adımları sil,
+   dersin herkese mi yoksa yalnızca bir sınıfına mı görüneceğini seç ve kaydet.
 
 ## Canlıya almak
 
@@ -108,7 +110,7 @@ Ters vekil kullanıyorsan (nginx, Caddy):
 
 - `Host` başlığını olduğu gibi ilet. Yönetici istekleri `Origin` ile `Host`'u karşılaştırır, uyuşmazsa 403 döner.
 - `X-Forwarded-For` başlığını istemcinin gerçek IP'siyle ez (giriş denemesi sınırı buna bakar).
-- Yönetici `.sb3` yüklemeleri 20 MB'a kadar çıkabilir, `client_max_body_size 25m;` gibi bir sınır koy.
+- Proje ve ders yüklemeleri 10 MB'a kadar çıkabilir, `client_max_body_size 12m;` gibi bir sınır koy.
 - Sitenin HTTPS üzerinden açıldığından emin ol, yönetici çerezi yalnızca HTTPS'te saklanır.
 
 Docker ile çalıştırmak istersen basit bir `Dockerfile`:
@@ -131,32 +133,24 @@ EXPOSE 3001
 CMD ["node", "src/index.js"]
 ```
 
-`/data` klasörünü bir volume olarak bağla, yoksa konteyner silinince dersler ve yüklenen dosyalar gider.
+`/data` klasörünü bir volume olarak bağla, yoksa konteyner silinince hesaplar, projeler ve dersler gider.
 Docker kullanmayacaksan `server/deploy/` klasöründe bir systemd birim dosyası ve Caddy örneği var,
 ayrıntılar `server/README.md` içinde.
 
 `deploy.sh` benim kendi sunucuma gönderirken kullandığım betik. Sunucu adı ve yolları ortam değişkenleriyle
 değişiyor (`DEPLOY_HOST`, `DEPLOY_DIR`, `DEPLOY_URL`), kendi düzenine göre uyarlayabilirsin.
 
-## Yeni ders yazmak
+## Hazır ders eklemek
 
-En kolayı yönetici paneli. Kod ile yazmak istersen dersler `lessons/sources/` altında küçük dosyalar olarak
-duruyor, her biri bir oyunun çözümünü bloklarla tarif ediyor. Sistem bu çözümden gerçek bir Scratch projesi
-üretip her adımın kontrolünü o proje üzerinde deniyor:
-
-```bash
-node lessons/build.js              # server/seed/*.json dosyalarını üretir
-node lessons/verify.js [ders-id]   # her adımın doğru çözümle geçtiğini, yanlış çözümle geçmediğini denetler
-```
-
-Ayrıntılar `lessons/README.md` dosyasında.
+Herkese açık, kimsenin silemediği dersler `server/builtin-lessons/` klasöründe duruyor. Her ders iki dosya:
+adımları içeren `<ad>.json` ve başlangıç projesi `<ad>.sb3`. Sunucu her açılışta bu klasörü okur; yeni dersi
+ekler, değişeni günceller, klasörden kaldırılanı siler.
 
 ## Testler
 
 ```bash
 npm run test:unit      # editör tarafı
 npm run test:server    # sunucu
-npm run test:lessons   # derslerin çözümlerini gerçek scratch-vm üzerinde doğrular
 npm run test:lint      # eslint
 ```
 

@@ -19,10 +19,145 @@
     <link rel="icon" type="image/png" sizes="16x16" href="static/favicon/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="static/favicon/apple-touch-icon.png">
     <link rel="manifest" href="static/favicon/site.webmanifest">
-    <meta name="theme-color" content="#9966ff">
+    <meta name="theme-color" content="#FFD447">
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
+    <% if (htmlWebpackPlugin.options.splash) { %>
+    <!-- Açılış ekranı: 1,5 sn'lik SVG + CSS animasyonu (video değil, bu yüzden her ekranda keskin). Uygulama hazır olunca solarak kalkar. -->
+    <style>
+      #sk-splash { position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; background-color: #FFF9E6; color: #184D47; transition: opacity 0.4s ease; }
+      #sk-splash.sk-hide { opacity: 0; pointer-events: none; }
+      #sk-splash * { box-sizing: border-box; }
+      #sk-splash .sk-bg { position: absolute; inset: -200px; background: repeating-linear-gradient(-35deg, #FFD44733 0 90px, transparent 90px 180px); animation: sk-bg 3s linear infinite paused; }
+      #sk-splash .sk-dots { position: absolute; inset: 0; background: radial-gradient(#184D4730 3px, transparent 3.5px) 0 0 / 44px 44px; animation: sk-dots 3s linear infinite paused; }
+      #sk-splash .sk-stage { position: absolute; left: 50%; top: 50%; width: min(100vw, 177.78vh); aspect-ratio: 16 / 9; transform: translate(-50%, -50%); container-type: inline-size; }
+      #sk-splash .sk-in { position: absolute; inset: 0; --u: calc(100cqw / 1280); }
+      #sk-splash .sk-in > * { position: absolute; }
+      #sk-splash .sk-curtain { position: absolute; inset: 0 -25vh; display: flex; }
+      #sk-splash .sk-col { flex: 1; margin: 0 -30px; background: #FFD447; border: 7px solid #184D47; transform: skewX(-14deg); animation: sk-col 0.3s cubic-bezier(0.7, 0, 0.3, 1) both paused; animation-delay: calc(var(--i) * 0.035s); }
+      #sk-splash .sk-col:nth-child(odd) { --to: 108%; }
+      #sk-splash .sk-col:nth-child(even) { --to: -108%; }
+
+      #sk-splash .sk-logo { left: calc(var(--u) * 330); top: calc(var(--u) * 150); width: calc(var(--u) * 620); animation: sk-drop 0.6s linear 0.18s both paused, sk-pulse 0.2s ease-in-out 1.3s both paused; filter: drop-shadow(calc(var(--u) * 10) calc(var(--u) * 10) 0 #184D47); }
+      #sk-splash .sk-logo img { display: block; width: 100%; height: auto; }
+      #sk-splash .sk-shape { animation: sk-pop 0.38s linear both paused; animation-delay: var(--at); }
+      #sk-splash .sk-shape > svg { display: block; width: 100%; height: 100%; overflow: visible; animation: sk-float 1.6s ease-in-out infinite alternate paused; animation-delay: var(--at); filter: drop-shadow(calc(var(--u) * 9) calc(var(--u) * 9) 0 #184D47); }
+
+      #sk-splash .sk-bar { left: calc(var(--u) * 320); top: calc(var(--u) * 500); width: calc(var(--u) * 640); height: calc(var(--u) * 56); border: calc(var(--u) * 7) solid #184D47; border-radius: calc(var(--u) * 40); background: #fff; box-shadow: calc(var(--u) * 10) calc(var(--u) * 10) 0 #184D47; overflow: hidden; animation: sk-barin 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s both paused; }
+      #sk-splash .sk-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: #62D3B4 repeating-linear-gradient(-45deg, #184D4722 0 14px, transparent 14px 28px); border-right: calc(var(--u) * 6) solid #184D47; animation: sk-fill 0.78s cubic-bezier(0.65, 0, 0.35, 1) 0.6s both paused; }
+      #sk-splash .sk-text { left: calc(var(--u) * 320); top: calc(var(--u) * 582); width: calc(var(--u) * 640); animation: sk-fade 0.25s ease 0.5s both paused; }
+      #sk-splash .sk-text svg { display: block; width: calc(var(--u) * 290); height: auto; margin: 0 auto; fill: #184D47; }
+      #sk-splash .sk-run { left: calc(var(--u) * 280); top: calc(var(--u) * 382); width: calc(var(--u) * 132); animation: sk-run 0.78s cubic-bezier(0.65, 0, 0.35, 1) 0.6s both paused; }
+      #sk-splash .sk-run-in { transform-origin: 50% 100%; animation: sk-catin 0.4s ease-out 0.4s both paused; }
+      #sk-splash .sk-run-hop { animation: sk-hop 0.196s ease-in-out 0.45s 5 paused; filter: drop-shadow(calc(var(--u) * 6) calc(var(--u) * 6) 0 #184D4755); }
+      #sk-splash .sk-run img { display: block; width: 100%; height: auto; }
+
+      #sk-splash.sk-go *, #sk-splash.sk-go *::before { animation-play-state: running !important; }
+      @keyframes sk-bg { to { transform: translate(-102px, -147px); } }
+      @keyframes sk-dots { to { background-position: 132px 78px; } }
+      @keyframes sk-col { to { transform: skewX(-14deg) translateY(var(--to)); } }
+      @keyframes sk-drop {
+        0% { transform: translateY(-72%) rotate(-8deg); opacity: 0; animation-timing-function: ease-in; }
+        20% { opacity: 1; }
+        46% { transform: translateY(0) rotate(0); animation-timing-function: ease-out; }
+        62% { transform: translateY(-5%); animation-timing-function: ease-in; }
+        76% { transform: translateY(0); animation-timing-function: ease-out; }
+        88% { transform: translateY(-1.5%); animation-timing-function: ease-in; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes sk-pulse { 50% { scale: 1.035; } }
+      @keyframes sk-pop {
+        0% { transform: scale(0) rotate(var(--spin)); opacity: 0; }
+        25% { opacity: 1; }
+        55% { transform: scale(1.18) rotate(calc(var(--spin) * -0.12)); }
+        78% { transform: scale(0.94); }
+        100% { transform: scale(1) rotate(0); opacity: 1; }
+      }
+      @keyframes sk-float { to { transform: translateY(calc(var(--u) * -10)); } }
+      @keyframes sk-barin { from { transform: scale(0); opacity: 0; } 50% { opacity: 1; } to { transform: scale(1); opacity: 1; } }
+      @keyframes sk-fill { to { width: 100%; } }
+      @keyframes sk-fade { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes sk-run { from { transform: translateX(0); } to { transform: translateX(calc(var(--u) * 550)); } }
+      @keyframes sk-catin { from { transform: scale(0); } 60% { transform: scale(1.15); } to { transform: scale(1); } }
+      @keyframes sk-hop { 50% { transform: translateY(calc(var(--u) * -30)); } }
+      @media (prefers-reduced-motion: reduce) {
+        #sk-splash .sk-curtain, #sk-splash .sk-bg, #sk-splash .sk-dots { display: none; }
+        #sk-splash .sk-in * { animation: none !important; opacity: 1; transform: none; }
+        #sk-splash .sk-fill { width: 100%; }
+      }
+    </style>
+    <div id="sk-splash" aria-hidden="true">
+      <div class="sk-bg"></div>
+      <div class="sk-dots"></div>
+      <div class="sk-stage"><div class="sk-in">
+        <div class="sk-shape" style="--at:0.4s;--spin:40deg;left:calc(var(--u)*150);top:calc(var(--u)*120);width:calc(var(--u)*110);height:calc(var(--u)*110)"><svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="51" fill="#FF9A80" stroke="#184D47" stroke-width="7"/></svg></div>
+        <div class="sk-shape" style="--at:0.46s;--spin:-50deg;left:calc(var(--u)*1060);top:calc(var(--u)*90);width:calc(var(--u)*130);height:calc(var(--u)*130)"><svg viewBox="0 0 130 130"><path d="M65 6 L125 124 H5 Z" fill="#62D3B4" stroke="#184D47" stroke-width="8" stroke-linejoin="miter"/></svg></div>
+        <div class="sk-shape" style="--at:0.52s;--spin:60deg;left:calc(var(--u)*1090);top:calc(var(--u)*520);width:calc(var(--u)*100);height:calc(var(--u)*100)"><svg viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" fill="#FFD447" stroke="#184D47" stroke-width="7"/></svg></div>
+        <div class="sk-shape" style="--at:0.58s;--spin:-35deg;left:calc(var(--u)*120);top:calc(var(--u)*520);width:calc(var(--u)*120);height:calc(var(--u)*120)"><svg viewBox="0 0 120 120"><path d="M42 4H78V42H116V78H78V116H42V78H4V42H42Z" fill="#62D3B4" stroke="#184D47" stroke-width="7" stroke-linejoin="miter"/></svg></div>
+        <div class="sk-shape" style="--at:0.64s;--spin:0deg;left:calc(var(--u)*980);top:calc(var(--u)*300);width:calc(var(--u)*60);height:calc(var(--u)*60)"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="#FFD447" stroke="#184D47" stroke-width="6"/></svg></div>
+        <div class="sk-shape" style="--at:0.7s;--spin:-45deg;left:calc(var(--u)*250);top:calc(var(--u)*330);width:calc(var(--u)*56);height:calc(var(--u)*56)"><svg viewBox="0 0 56 56"><rect x="3" y="3" width="50" height="50" fill="#FF9A80" stroke="#184D47" stroke-width="6"/></svg></div>
+
+        <div class="sk-logo"><img id="sk-logo-img" src="static/splash/logo.svg" alt=""></div>
+
+        <div class="sk-bar"><div class="sk-fill"></div></div>
+        <div class="sk-text"><svg viewBox="0 -980 8044 1050"><path d="M501 0H280V-267L7 -688H261L393 -459H397L529 -688H770L501 -267ZM1068 -746V-885H1220V-746ZM1289 -746V-885H1441V-746ZM1255 12Q1091 12 1002 -62Q912 -136 912 -277V-688H1133V-280Q1133 -222 1164 -188Q1195 -153 1254 -153Q1313 -153 1344 -188Q1376 -223 1376 -280V-688H1597V-277Q1597 -136 1508 -62Q1419 12 1255 12ZM2271 -688H2545L2298 -405L2550 0H2289L2146 -252L2026 -154V0H1805V-688H2026V-394ZM2698 -688H2919V-176H3272V0H2698ZM3425 -688H4020V-523H3646V-428H3966V-270H3646V-165H4027V0H3425ZM4699 0 4410 -334V0H4207V-688H4400L4689 -349V-688H4892V0ZM5145 -746V-885H5297V-746ZM5110 0V-688H5331V0ZM5976 0H5755V-267L5482 -688H5736L5868 -459H5872L6004 -688H6245L5976 -267ZM7101 -344Q7101 -170 7004 -79Q6907 12 6729 12Q6551 12 6454 -78Q6358 -169 6358 -344Q6358 -519 6454 -610Q6551 -700 6729 -700Q6907 -700 7004 -609Q7101 -518 7101 -344ZM6584 -376V-312Q6584 -239 6621 -196Q6658 -153 6729 -153Q6800 -153 6838 -196Q6875 -239 6875 -312V-376Q6875 -449 6838 -492Q6800 -535 6729 -535Q6658 -535 6621 -492Q6584 -449 6584 -376ZM7800 -288 7953 0H7705L7583 -251H7501V0H7280V-688H7701Q7775 -688 7828 -660Q7880 -631 7906 -582Q7933 -534 7933 -477Q7933 -414 7899 -363Q7865 -312 7800 -288ZM7646 -531H7501V-404H7646Q7672 -404 7690 -422Q7708 -441 7708 -468Q7708 -495 7690 -513Q7672 -531 7646 -531Z"/></svg></div>
+        <div class="sk-run"><div class="sk-run-in"><div class="sk-run-hop"><img id="sk-cat-img" src="static/splash/cat.svg" alt=""></div></div></div>
+      </div></div>
+      <div class="sk-curtain">
+        <div class="sk-col" style="--i:0"></div><div class="sk-col" style="--i:1"></div><div class="sk-col" style="--i:2"></div>
+        <div class="sk-col" style="--i:3"></div><div class="sk-col" style="--i:4"></div><div class="sk-col" style="--i:5"></div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var splash = document.getElementById('sk-splash');
+        if (!splash) return;
+        var started = Date.now();
+        var playStart = 0;
+        var animDone = false;
+        var closed = false;
+        var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // animasyon, iki SVG resmi de yüklenince başlar (yüklenmezse 1 sn sonra yine başlar)
+        function go() {
+          if (playStart) return;
+          playStart = Date.now();
+          splash.classList.add('sk-go');
+        }
+        var pending = 2;
+        function loaded() { if (--pending <= 0) go(); }
+        ['sk-logo-img', 'sk-cat-img'].forEach(function (id) {
+          var img = document.getElementById(id);
+          if (img.complete) loaded();
+          else { img.addEventListener('load', loaded); img.addEventListener('error', loaded); }
+        });
+        setTimeout(go, 1000);
+        if (reduced) animDone = true;
+        // uygulama hazır: yükleme ekranı (Scratch loader) kalktı ve menü çubuğu çizildi
+        function appReady() {
+          return !document.querySelector('[class*="loader_background"]') &&
+            Boolean(document.querySelector('[class*="menu-bar_menu-bar_"]'));
+        }
+        function close() {
+          if (closed) return;
+          closed = true;
+          splash.classList.add('sk-hide');
+          setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 500);
+        }
+        (function tick() {
+          var now = Date.now();
+          // animasyon 1,5 sn sürer; son karede ~1 sn daha bekletilir (toplam 2,6 sn)
+          if (playStart && now - playStart >= 2600) animDone = true;
+          // animasyon bitti ve uygulama hazır; ne olursa olsun en geç 25 sn'de kapanır
+          if ((animDone && appReady()) || now - started > 25000) {
+            close();
+            return;
+          }
+          setTimeout(tick, 100);
+        })();
+      })();
+    </script>
+    <% } %>
     <% if (htmlWebpackPlugin.options.gtm_id) { %>
       <!-- Google Tag Manager (noscript) -->
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<%- htmlWebpackPlugin.options.gtm_id %><%= htmlWebpackPlugin.options.gtm_env_auth %>" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

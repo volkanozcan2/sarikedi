@@ -1,0 +1,288 @@
+{
+  "title": "SARIKEDİ'yi tanıyalım",
+  "description": "Menüler, sahne, kuklalar, dekorlar, sekmeler ve blok kategorileri: arayüzü adım adım gez, sonunda ilk projeni yap.",
+  "steps": [
+    {
+      "type": "note",
+      "text": "Merhaba! 👋 Bu derste SARIKEDİ'nin her köşesini birlikte gezeceğiz ve sonunda ilk projeni yapacaksın. Her adımda bir el sana nereye bakacağını gösterecek. Hazırsan \"Devam\"a bas."
+    },
+    {
+      "type": "point",
+      "target": "logo",
+      "text": "En üstteki sarı şerit menü çubuğu. Projeyle ilgili her şeyin menüleri burada."
+    },
+    {
+      "type": "point",
+      "target": "menuFile",
+      "text": "Dosya menüsü: yeni bir proje açar, bilgisayarındaki bir projeyi yükler ya da projeni bilgisayarına kaydeder."
+    },
+    {
+      "type": "point",
+      "target": "menuEdit",
+      "text": "Düzenle menüsü: yanlışlıkla sildiğin kuklayı geri getirir; turbo mod, 60 FPS ve arayüz seslerini açıp kapatır."
+    },
+    {
+      "type": "point",
+      "target": "menuShared",
+      "text": "Paylaşılanlar: arkadaşlarının paylaştığı projeleri görür, beğenir ve yorum yaparsın."
+    },
+    {
+      "type": "point",
+      "target": "menuLessons",
+      "text": "Dersler: şu an içinde olduğun bölüm. Adım adım dersler burada seni bekliyor."
+    },
+    {
+      "type": "point",
+      "target": "account",
+      "text": "Sağ üstten giriş yapar ya da kaydolursun. Giriş yapınca projelerini hesabına kaydedip paylaşabilirsin."
+    },
+    {
+      "type": "point",
+      "target": "stage",
+      "text": "Burası Sahne. Kuklaların hareket ettiği, projenin çalıştığı yer burası."
+    },
+    {
+      "type": "point",
+      "target": "greenFlag",
+      "text": "Yeşil bayrak projeyi başlatır. Hadi, yeşil bayrağa bir tıkla!",
+      "click": true
+    },
+    {
+      "type": "point",
+      "target": "stopAll",
+      "text": "Kırmızı dur düğmesi çalışan her şeyi durdurur. Şimdi ona tıkla.",
+      "click": true
+    },
+    {
+      "type": "point",
+      "target": "stageSize",
+      "text": "Bu iki düğmeyle sahneyi küçültüp büyütebilirsin. Küçük sahne, kod alanına daha çok yer açar."
+    },
+    {
+      "type": "point",
+      "target": "fullScreen",
+      "text": "Bu düğme sahneyi tam ekran yapar. Projeni arkadaşlarına gösterirken çok işe yarar."
+    },
+    {
+      "type": "point",
+      "target": "spriteInfo",
+      "text": "Kukla bilgileri: kuklanın adı, sahnedeki yeri (x ve y), görünüp görünmeyeceği, büyüklüğü ve yönü burada."
+    },
+    {
+      "type": "point",
+      "target": "spriteList",
+      "text": "Projendeki bütün kuklalar burada durur. Hangisine tıklarsan onun kodlarını düzenlersin."
+    },
+    {
+      "type": "addSprite",
+      "any": true,
+      "text": "Sağ alttaki kedili düğme \"Kukla Seç\". Ona tıkla ve kütüphaneden istediğin bir kuklayı ekle."
+    },
+    {
+      "type": "point",
+      "target": "stageSelector",
+      "text": "En sağdaki bölüm Sahne. Arka plan resimlerine dekor denir ve buradan yönetilir."
+    },
+    {
+      "type": "addBackdrop",
+      "any": true,
+      "text": "Sağ alttaki resimli düğme \"Dekor Seç\". Ona tıkla ve beğendiğin bir dekor ekle."
+    },
+    {
+      "type": "selectSprite",
+      "name": "Cool Cat",
+      "isStage": false,
+      "text": "Şimdi kukla listesinden Cool Cat'e tıklayıp onu seç."
+    },
+    {
+      "type": "selectTab",
+      "tab": "costumes",
+      "text": "\"Kostümler\" sekmesine geç. Burada kuklanın farklı görünüşlerini çizer ve düzenlersin."
+    },
+    {
+      "type": "point",
+      "target": "assetAdd",
+      "text": "Bu düğmeyle yeni kostüm seçebilir, kendin çizebilir ya da bilgisayarından resim yükleyebilirsin.",
+      "tab": "costumes"
+    },
+    {
+      "type": "selectTab",
+      "tab": "sounds",
+      "text": "\"Sesler\" sekmesine geç. Kuklanın seslerini burada dinler, kaydeder ve düzenlersin."
+    },
+    {
+      "type": "selectTab",
+      "tab": "code",
+      "text": "Şimdi \"Kod\" sekmesine dön. Asıl eğlence burada başlıyor!"
+    },
+    {
+      "type": "point",
+      "target": "palette",
+      "text": "Burası blok paleti. Bloklar yaptıkları işe göre renkli kategorilere ayrılmış.",
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "category:motion",
+      "text": "Hareket (mavi): kuklayı yürütür, döndürür, bir yere gönderir. Hareket'e tıkla.",
+      "click": true,
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "category:looks",
+      "text": "Görünüm (mor): konuşma balonu, kostüm değiştirme, büyütüp küçültme. Görünüm'e tıkla.",
+      "click": true,
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "category:sound",
+      "text": "Ses (pembe): ses çalma ve ses efektleri. Ses'e tıkla.",
+      "click": true,
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "category:events",
+      "text": "Olaylar (sarı): \"yeşil bayrağa tıklandığında\" gibi kodları başlatan bloklar. Olaylar'a tıkla.",
+      "click": true,
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "category:control",
+      "text": "Kontrol (turuncu): bekle, tekrarla, \"eğer ... ise\" gibi akışı yöneten bloklar. Kontrol'e tıkla.",
+      "click": true,
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "category:sensing",
+      "text": "Algılama (açık mavi): bir şeye dokunuyor mu, tuşa basıldı mı, fare nerede? Algılama'ya tıkla.",
+      "click": true,
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "category:operators",
+      "text": "Operatörler (yeşil): toplama, çıkarma, karşılaştırma ve rastgele sayılar. Operatörler'e tıkla.",
+      "click": true,
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "category:variables",
+      "text": "Değişkenler (turuncu): skor, can gibi değerleri saklar. Değişkenler'e tıkla.",
+      "click": true,
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "category:myBlocks",
+      "text": "Bloklarım (kırmızı): kendi bloklarını yaparsın. Bloklarım'a tıkla.",
+      "click": true,
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "codeArea",
+      "text": "Burası kod alanı. Blokları paletten buraya sürükler, yapboz gibi birbirine takarsın.",
+      "tab": "code"
+    },
+    {
+      "type": "point",
+      "target": "extensionButton",
+      "text": "Sol alttaki bu düğmeyle Kalem, Müzik gibi yeni blok setleri (eklentiler) ekleyebilirsin.",
+      "tab": "code"
+    },
+    {
+      "type": "note",
+      "text": "Şimdi ilk kodunu yazalım! Cool Cat sürekli yürüyecek ve kenara gelince geri dönecek. Gösterilen blokları gösterilen yere sürükle."
+    },
+    {
+      "type": "addBlock",
+      "target": "Cool Cat",
+      "block": "T-flag",
+      "opcode": "event_whenflagclicked",
+      "label": "yeşil bayrağa tıklandığında",
+      "attach": {
+        "how": "top"
+      },
+      "parentOpcode": null,
+      "parentLabel": null,
+      "fields": {},
+      "values": {},
+      "changed": [],
+      "text": "Olaylar kategorisinden \"yeşil bayrağa tıklandığında\" bloğunu al ve kod alanına bırak."
+    },
+    {
+      "type": "addBlock",
+      "target": "Cool Cat",
+      "block": "T-forever",
+      "opcode": "control_forever",
+      "label": "sürekli tekrarla",
+      "attach": {
+        "to": "T-flag",
+        "how": "next"
+      },
+      "parentOpcode": "event_whenflagclicked",
+      "parentLabel": "yeşil bayrağa tıklandığında",
+      "fields": {},
+      "values": {},
+      "changed": [],
+      "text": "Kontrol kategorisinden \"sürekli tekrarla\" bloğunu al, bayrak bloğunun altına tak."
+    },
+    {
+      "type": "addBlock",
+      "target": "Cool Cat",
+      "block": "T-move",
+      "opcode": "motion_movesteps",
+      "label": "10 adım git",
+      "attach": {
+        "to": "T-forever",
+        "how": "input",
+        "input": "SUBSTACK"
+      },
+      "parentOpcode": "control_forever",
+      "parentLabel": "sürekli tekrarla",
+      "fields": {},
+      "values": {},
+      "changed": [],
+      "text": "Hareket kategorisinden \"10 adım git\" bloğunu al, \"sürekli tekrarla\" bloğunun içine yerleştir."
+    },
+    {
+      "type": "addBlock",
+      "target": "Cool Cat",
+      "block": "T-bounce",
+      "opcode": "motion_ifonedgebounce",
+      "label": "kenara geldiyse sek",
+      "attach": {
+        "to": "T-move",
+        "how": "next"
+      },
+      "parentOpcode": "motion_movesteps",
+      "parentLabel": "10 adım git",
+      "fields": {},
+      "values": {},
+      "changed": [],
+      "text": "Hareket kategorisinden \"kenara geldiyse sek\" bloğunu al, \"10 adım git\" bloğunun altına tak."
+    },
+    {
+      "type": "point",
+      "target": "greenFlag",
+      "text": "Harika! Şimdi yeşil bayrağa tıkla ve Cool Cat'i izle. 🐱",
+      "click": true
+    },
+    {
+      "type": "point",
+      "target": "stopAll",
+      "text": "Durdurmak için kırmızı düğmeye tıkla.",
+      "click": true
+    },
+    {
+      "type": "note",
+      "text": "Tebrikler! 🎉 SARIKEDİ'yi baştan sona tanıdın ve ilk projeni yaptın. Şimdi Dersler'den yeni bir derse geçebilir ya da kendi projeni yapmaya başlayabilirsin."
+    }
+  ]
+}

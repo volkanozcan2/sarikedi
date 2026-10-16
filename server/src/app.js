@@ -1,15 +1,14 @@
 /**
- * Express uygulaması: herkese açık ders API'si ve girişli yönetici API'si.
+ * Express uygulaması: hesap, proje ve paylaşım API'leri ile girişli yönetici API'si.
  */
 
-const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const express = require('express');
 const compression = require('compression');
 const auth = require('./auth');
-const {detectUpload} = require('./uploads');
-const {ValidationError, NotFoundError, ConflictError} = require('./db');
+const {ValidationError, NotFoundError, ConflictError, UnsupportedError, TooLargeError} = require('./errors');
+const {mountUserRoutes} = require('./user-routes');
+const {RateError} = require('./social');
 
 const COOKIE_NAME = 'sk_admin';
 const SESSION_MS = 12 * 60 * 60 * 1000;
@@ -27,7 +26,18 @@ const parseCookies = header => {
 
 const MAX_CONCURRENT_HASHING = 2;
 
-const createApp = ({store, config, now = Date.now, rateLimiter = auth.createRateLimiter()}) => {
+const createApp = ({
+    store, config, now = Date.now, rateLimiter = auth.createRateLimiter(),
+    // öğretmen/öğrenci girişi: bir okul aynı IP'den çıkabildiği için anahtar IP+kullanıcı adıdır
+    userRateLimiter = auth.createRateLimiter({max: 8, globalMax: 300, now: now}),
+    registerRateLimiter = auth.createRateLimiter({
+        max: 60,
+        windowMs: 60 * 60 * 1000,
+        globalMax: 600,
+        globalWindowMs: 60 * 60 * 1000,
+        now: now
+    })
+}) => {
     // Boş/kısa anahtarla imzalanan çerezler tahmin edilebilir: hiçbir kipte buna izin verilmez
     if (typeof config.sessionSecret !== 'string' || config.sessionSecret.length < 32) {
         throw new Error('SESSION_SECRET en az 32 karakter olmalı');
@@ -44,17 +54,8 @@ const createApp = ({store, config, now = Date.now, rateLimiter = auth.createRate
     });
     app.use(compression());
 
-    app.use('/uploads', express.static(config.uploadsDir, {
-        dotfiles: 'ignore',
-        index: false,
-        redirect: false,
-        maxAge: '30d',
-        immutable: true
-    }));
-
     const api = express.Router();
     const jsonBody = express.json({limit: '1mb'});
-    const rawBody = express.raw({type: () => true, limit: '21mb'});
 
     const sameOrigin = (req, res, next) => {
         const origin = req.get('origin');
@@ -86,18 +87,6 @@ const createApp = ({store, config, now = Date.now, rateLimiter = auth.createRate
 
     // ---- herkese açık ----
     api.get('/health', (req, res) => res.json({ok: true}));
-
-    api.get('/lessons', (req, res) => {
-        res.set('Cache-Control', 'no-cache');
-        res.json(store.listPublished());
-    });
-
-    api.get('/lessons/:id', (req, res) => {
-        res.set('Cache-Control', 'no-cache');
-        const lesson = store.get(req.params.id);
-        if (!lesson || !lesson.published) return res.status(404).json({error: 'Ders bulunamadı'});
-        return res.json(lesson);
-    });
 
     // ---- yönetici ----
     api.post('/admin/login', sameOrigin, jsonBody, (req, res, next) => {
@@ -149,48 +138,17 @@ const createApp = ({store, config, now = Date.now, rateLimiter = auth.createRate
 
     admin.get('/me', (req, res) => res.json({admin: true}));
 
-    admin.get('/lessons', (req, res) => res.json(store.listAll()));
-
-    admin.get('/lessons/:id', (req, res) => {
-        const lesson = store.get(req.params.id);
-        if (!lesson) return res.status(404).json({error: 'Ders bulunamadı'});
-        return res.json(lesson);
-    });
-
-    admin.post('/lessons', jsonBody, (req, res) => {
-        store.create(req.body);
-        res.status(201).json(store.get(req.body.id));
-    });
-
-    admin.put('/lessons/:id', jsonBody, (req, res) => {
-        store.replace(req.params.id, req.body);
-        res.json(store.get(req.params.id));
-    });
-
-    admin.delete('/lessons/:id', (req, res) => {
-        if (!store.remove(req.params.id)) return res.status(404).json({error: 'Ders bulunamadı'});
-        return res.status(204).end();
-    });
-
-    admin.put('/order', jsonBody, (req, res) => {
-        store.reorder(req.body ? req.body.ids : null);
-        res.json({ok: true});
-    });
-
-    admin.post('/upload', rawBody, (req, res) => {
-        const body = req.body;
-        if (!Buffer.isBuffer(body) || body.length < 12) {
-            return res.status(400).json({error: 'Dosya boş ya da çok küçük'});
-        }
-        const kind = detectUpload(body);
-        if (!kind) {
-            return res.status(415).json({error: 'Desteklenmeyen dosya türü (png, jpg, gif, webp, sb3)'});
-        }
-        if (body.length > kind.maxBytes) return res.status(413).json({error: 'Dosya çok büyük'});
-        fs.mkdirSync(config.uploadsDir, {recursive: true});
-        const name = `${crypto.randomBytes(12).toString('hex')}.${kind.ext}`;
-        fs.writeFileSync(path.join(config.uploadsDir, name), body, {flag: 'wx'});
-        return res.status(201).json({url: `/uploads/${name}`});
+    mountUserRoutes({
+        api,
+        admin,
+        store,
+        config,
+        now,
+        sameOrigin,
+        jsonBody,
+        parseCookies,
+        limiter: userRateLimiter,
+        registerLimiter: registerRateLimiter
     });
 
     api.use('/admin', admin);
@@ -224,6 +182,9 @@ const createApp = ({store, config, now = Date.now, rateLimiter = auth.createRate
         }
         if (error instanceof NotFoundError) return res.status(404).json({error: error.message});
         if (error instanceof ConflictError) return res.status(409).json({error: error.message});
+        if (error instanceof RateError) return res.status(429).json({error: error.message});
+        if (error instanceof UnsupportedError) return res.status(415).json({error: error.message});
+        if (error instanceof TooLargeError) return res.status(413).json({error: error.message});
         if (error.type === 'entity.too.large') return res.status(413).json({error: 'İstek çok büyük'});
         if (error.type === 'entity.parse.failed' || error instanceof SyntaxError) {
             return res.status(400).json({error: 'Geçersiz JSON'});

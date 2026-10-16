@@ -1,6 +1,9 @@
 import {ScratchStorage} from 'scratch-storage';
 
 import defaultProject from './default-project';
+import trLetterAssets from './libraries/tr-letter-assets.json';
+
+const TR_LETTER_IDS = new Set(trLetterAssets);
 
 /**
  * Wrapper for ScratchStorage which adds default web sources.
@@ -12,6 +15,8 @@ class Storage extends ScratchStorage {
         this.cacheDefaultProject();
     }
     addOfficialScratchWebStores () {
+        // Türkçe harf kuklalarının SVG'leri Scratch CDN'inde yok; bu sitenin kendi dosyalarından yüklenir
+        this.addWebStore([this.AssetType.ImageVector], this.getTurkishLetterConfig.bind(this));
         this.addWebStore(
             [this.AssetType.Project],
             this.getProjectGetConfig.bind(this),
@@ -31,6 +36,17 @@ class Storage extends ScratchStorage {
             [this.AssetType.Sound],
             asset => `static/extension-assets/scratch3_music/${asset.assetId}.${asset.dataFormat}`
         );
+    }
+    getTurkishLetterConfig (asset) {
+        if (!TR_LETTER_IDS.has(asset.assetId)) return false;
+        // Varlıklar bir web worker (fetch-worker) içinde indirilir; göreli adres worker'ın dosya yoluna göre
+        // çözülür ve bulunamaz. Bu yüzden sayfa adresine göre mutlak adres verilir.
+        const relative = `static/tr-letters/${asset.assetId}.${asset.dataFormat}`;
+        try {
+            return new URL(relative, window.location.href).href;
+        } catch (e) {
+            return relative; // adres çözülemiyorsa (örn. test ortamı) göreli yol kalır
+        }
     }
     setProjectHost (projectHost) {
         this.projectHost = projectHost;

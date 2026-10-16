@@ -2,224 +2,141 @@ import bindAll from 'lodash.bindall';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
-import ScratchBlocks from 'scratch-blocks';
 
-import GuideOverlay from '../components/guide-overlay/guide-overlay.jsx';
-import LessonPanel from '../components/lesson-panel/lesson-panel.jsx';
-import {buildGuideFrames} from '../lib/lessons/guide-frames';
-import {resolveTargetRect} from '../lib/lessons/guide-targets';
-import {progress} from '../lib/lessons/progress';
-import {createStepWatcher} from '../lib/lessons/step-watcher';
-import {
-    exitLesson, getCurrentStep, nextStep, prevStep, stepPassed, toggleExpanded
-} from '../reducers/lessons';
+import StepCard from '../components/lessons/step-card.jsx';
+import {createChecker} from '../lib/lessons/checker';
+import {celebrate} from '../lib/celebrate';
+import {describeStep} from '../lib/lessons/describe';
+import {clearHints, showHints, targetElement} from '../lib/lessons/hints';
+import {readLessonState} from '../lib/lessons/vm-state';
+import {closeLesson} from '../reducers/lessons';
 
-const AUTO_ADVANCE_MS = 900;
+const SETTLE_MS = 150;
+const CLOSE_QUESTION = 'Dersten çıkılsın mı? Projen editörde kalır.';
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
+/** Öğrencinin dersi: adımları sırayla gösterir, ipucunu oynatır ve yaptıkça sonraki adıma geçer. */
 class LessonPlayer extends React.Component {
     constructor (props) {
         super(props);
-        bindAll(this, [
-            'advance', 'getStep', 'handleResult', 'handlePointerDown', 'handleGuideDone',
-            'handleShowHint', 'replayGuide', 'handlePrev', 'handleNext', 'handleReplayGuide'
-        ]);
-        this.state = {hintVisible: false, frames: [], playKey: 0};
-        this.token = 0;
-        this.advanceTimer = null;
-        // Geri ile dönülen adım hâlâ doğru olabilir; öğrenci İleri'ye basana kadar otomatik ilerleme kapalı
-        this.noAutoAdvance = false;
-        this.watcher = createStepWatcher({
-            vm: props.vm,
-            getStep: this.getStep,
-            onResult: this.handleResult
-        });
-        this.watching = false;
+        bindAll(this, ['schedule', 'check', 'handleShow', 'handleSkip', 'handleClose', 'handlePointer']);
+        this.timer = null;
+        this.state = {index: 0};
     }
     componentDidMount () {
-        this.sync(null);
+        if (this.props.lesson) this.begin();
     }
     componentDidUpdate (prevProps) {
-        this.sync(prevProps);
+        if (this.props.lesson && this.props.lesson !== prevProps.lesson) this.begin();
+        if (!this.props.lesson && prevProps.lesson) this.end();
+        // sekme değişince: adım geçilmiş olabilir, değilse ipucu yeni sekmeye göre yeniden gösterilir
+        if (this.props.lesson && this.props.activeTabIndex !== prevProps.activeTabIndex) this.check(true);
     }
     componentWillUnmount () {
-        this.stopWatching();
-        clearTimeout(this.advanceTimer);
-        this.token++;
+        this.end();
     }
-    getStep () {
-        return getCurrentStep(this.props);
+    readState () {
+        return readLessonState(this.props.vm, this.props.activeTabIndex);
     }
-    isActive () {
-        return this.props.status === 'active';
+    begin () {
+        this.end();
+        this.checker = createChecker(this.props.lesson.steps, this.readState());
+        this.props.vm.on('PROJECT_CHANGED', this.schedule);
+        this.props.vm.on('targetsUpdate', this.schedule);
+        this.props.vm.on('EXTENSION_ADDED', this.schedule);
+        document.addEventListener('pointerdown', this.handlePointer, true);
+        this.setState({index: 0}, () => this.check(true));
     }
-    sync (prevProps) {
-        if (this.isActive()) {
-            this.startWatching();
-            if (prevProps && prevProps.lesson !== this.props.lesson) this.noAutoAdvance = false;
-            const changed = !prevProps || prevProps.lesson !== this.props.lesson ||
-                prevProps.stepIndex !== this.props.stepIndex || prevProps.status !== this.props.status;
-            if (changed) this.onStepChanged();
-        } else {
-            this.stopWatching();
-            clearTimeout(this.advanceTimer);
-            if (this.state.frames.length > 0 || this.state.hintVisible) {
-                this.token++;
-                this.setState({frames: [], hintVisible: false});
-            }
+    end () {
+        clearTimeout(this.timer);
+        this.timer = null;
+        this.props.vm.removeListener('PROJECT_CHANGED', this.schedule);
+        this.props.vm.removeListener('targetsUpdate', this.schedule);
+        this.props.vm.removeListener('EXTENSION_ADDED', this.schedule);
+        document.removeEventListener('pointerdown', this.handlePointer, true);
+        clearHints();
+    }
+    schedule () {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(this.check, SETTLE_MS);
+    }
+    check (force) {
+        if (!this.checker) return;
+        const index = this.checker.check(this.readState());
+        if (index !== this.state.index || force === true) {
+            const steps = this.props.lesson.steps.length;
+            // ders yeni bitti: konfeti
+            if (index >= steps && this.state.index < steps) celebrate();
+            this.setState({index: index});
+            this.showCurrent(index);
         }
     }
-    onStepChanged () {
-        clearTimeout(this.advanceTimer);
-        this.setState({hintVisible: false});
-        this.replayGuide();
-        this.watcher.check();
+    showCurrent (index) {
+        const step = this.props.lesson.steps[index];
+        if (step) showHints(step, this.checker.blockFor, this.readState().tab);
+        else clearHints();
     }
-    startWatching () {
-        if (this.watching) return;
-        this.watching = true;
-        this.watcher.start();
-        document.addEventListener('pointerdown', this.handlePointerDown, true);
+    // "göster" adımında öğrenci gösterilen öğeye tıklarsa adım geçilir (tıklamanın kendi işi de yapılır)
+    handlePointer (event) {
+        const step = this.props.lesson && this.props.lesson.steps[this.state.index];
+        if (!step || step.type !== 'point' || !step.click) return;
+        const element = targetElement(step.target);
+        if (!element || !element.contains(event.target)) return;
+        const index = this.state.index;
+        setTimeout(() => {
+            if (this.state.index !== index) return;
+            this.checker.skip();
+            this.check(true);
+        }, 250);
     }
-    stopWatching () {
-        if (!this.watching) return;
-        this.watching = false;
-        this.watcher.stop();
-        document.removeEventListener('pointerdown', this.handlePointerDown, true);
+    handleShow () {
+        this.showCurrent(this.state.index);
     }
-    handlePointerDown () {
-        if (this.state.frames.length > 0) {
-            this.token++;
-            this.setState({frames: []});
-        }
+    handleSkip () {
+        this.checker.skip();
+        this.check(true);
     }
-    handleGuideDone () {
-        // animasyon doğal olarak bitti; çerçeveler tekrar oynatma için saklanır
-    }
-    handleResult (result) {
-        if (!result.passed || this.props.passed) return;
-        this.props.onStepPassed();
-        if (this.noAutoAdvance) return;
-        const stepIndex = this.props.stepIndex;
-        clearTimeout(this.advanceTimer);
-        this.advanceTimer = setTimeout(() => {
-            if (this.isActive() && this.props.stepIndex === stepIndex) this.advance();
-        }, AUTO_ADVANCE_MS);
-    }
-    handleShowHint () {
-        this.setState({hintVisible: true});
-    }
-    handleNext () {
-        this.advance();
-    }
-    handleReplayGuide () {
-        this.replayGuide();
-    }
-    handlePrev () {
-        clearTimeout(this.advanceTimer);
-        this.noAutoAdvance = true;
-        this.props.onPrevStep();
-    }
-    advance () {
-        clearTimeout(this.advanceTimer);
-        this.noAutoAdvance = false;
-        const {lesson, stepIndex} = this.props;
-        const next = stepIndex + 1;
-        progress.save(lesson.id, {step: next, done: next >= lesson.steps.length});
-        this.props.onNextStep();
-    }
-    replayGuide () {
-        const step = this.getStep();
-        const token = ++this.token;
-        const actions = step && step.guide ? step.guide : [];
-        const env = {
-            document: document,
-            getWorkspace: () => ScratchBlocks.getMainWorkspace(),
-            sleep: sleep
-        };
-        Promise.all(actions.map(action => {
-            if (action.type === 'drag') {
-                return Promise.all([resolveTargetRect(action.from, env), resolveTargetRect(action.to, env)])
-                    .then(rects => ({type: 'drag', label: action.label, fromRect: rects[0], toRect: rects[1]}));
-            }
-            return resolveTargetRect(action.target, env)
-                .then(rect => ({type: 'click', label: action.label, rect: rect}));
-        })).then(items => {
-            if (token !== this.token) return;
-            this.setState(state => ({frames: buildGuideFrames(items), playKey: state.playKey + 1}));
-        });
+    handleClose () {
+        const finished = this.state.index >= this.props.lesson.steps.length;
+        // eslint-disable-next-line no-alert
+        if (!finished && !window.confirm(CLOSE_QUESTION)) return;
+        this.end();
+        this.props.onClose();
     }
     render () {
-        const {status, lesson, stepIndex, passed, expanded} = this.props;
-        if (status !== 'active' && status !== 'completed') return null;
-        const step = this.getStep();
-        const manual = !step || !step.checks || step.checks.length === 0;
+        const lesson = this.props.lesson;
+        if (!lesson) return null;
+        const step = lesson.steps[this.state.index];
         return (
-            <React.Fragment>
-                <LessonPanel
-                    completed={status === 'completed'}
-                    expanded={expanded}
-                    hintVisible={this.state.hintVisible}
-                    manual={manual}
-                    passed={passed}
-                    step={step}
-                    stepIndex={stepIndex}
-                    title={lesson ? lesson.title : ''}
-                    totalSteps={lesson ? lesson.steps.length : 0}
-                    onExit={this.props.onExit}
-                    onNext={this.handleNext}
-                    onPrev={this.handlePrev}
-                    onReplayGuide={this.handleReplayGuide}
-                    onShowHint={this.handleShowHint}
-                    onToggleExpanded={this.props.onToggleExpanded}
-                />
-                <GuideOverlay
-                    frames={this.state.frames}
-                    playKey={this.state.playKey}
-                    onDone={this.handleGuideDone}
-                />
-            </React.Fragment>
+            <StepCard
+                count={lesson.steps.length}
+                finished={!step}
+                index={this.state.index}
+                isNote={Boolean(step && step.type === 'note')}
+                manual={Boolean(step && (step.type === 'note' || (step.type === 'point' && !step.click)))}
+                text={step ? describeStep(step) : ''}
+                title={lesson.title}
+                onClose={this.handleClose}
+                onShow={this.handleShow}
+                onSkip={this.handleSkip}
+            />
         );
     }
 }
 
 LessonPlayer.propTypes = {
-    expanded: PropTypes.bool,
-    lesson: PropTypes.shape({
-        id: PropTypes.string,
-        title: PropTypes.string,
-        steps: PropTypes.array
-    }),
-    onExit: PropTypes.func,
-    onNextStep: PropTypes.func,
-    onPrevStep: PropTypes.func,
-    onStepPassed: PropTypes.func,
-    onToggleExpanded: PropTypes.func,
-    passed: PropTypes.bool,
-    status: PropTypes.string,
-    stepIndex: PropTypes.number,
-    vm: PropTypes.shape({runtime: PropTypes.object})
+    activeTabIndex: PropTypes.number,
+    lesson: PropTypes.shape({title: PropTypes.string, steps: PropTypes.arrayOf(PropTypes.object)}),
+    onClose: PropTypes.func.isRequired,
+    vm: PropTypes.shape({on: PropTypes.func, removeListener: PropTypes.func}).isRequired
 };
 
 const mapStateToProps = state => ({
-    status: state.scratchGui.lessons.status,
-    lesson: state.scratchGui.lessons.lesson,
-    stepIndex: state.scratchGui.lessons.stepIndex,
-    passed: state.scratchGui.lessons.passed,
-    expanded: state.scratchGui.lessons.expanded
+    activeTabIndex: state.scratchGui.editorTab.activeTabIndex,
+    lesson: state.scratchGui.lessons.mode === 'playing' ? state.scratchGui.lessons.lesson : null
 });
 
 const mapDispatchToProps = dispatch => ({
-    onExit: () => dispatch(exitLesson()),
-    onNextStep: () => dispatch(nextStep()),
-    onPrevStep: () => dispatch(prevStep()),
-    onStepPassed: () => dispatch(stepPassed()),
-    onToggleExpanded: () => dispatch(toggleExpanded())
+    onClose: () => dispatch(closeLesson())
 });
-
-export {
-    LessonPlayer as LessonPlayerComponent
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPlayer);

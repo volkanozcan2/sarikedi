@@ -16,6 +16,7 @@ describe('MenuBar Component', () => {
             locale: 'en-US'
         },
         scratchGui: {
+            account: {user: null, loaded: false},
             menus: menuInitialState,
             projectState: {
                 loadingState: LoadingState.NOT_LOADED

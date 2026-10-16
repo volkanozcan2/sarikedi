@@ -20,6 +20,7 @@ import DragConstants from '../lib/drag-constants';
 import defineDynamicBlock from '../lib/define-dynamic-block';
 import {DEFAULT_THEME, getColorsForTheme, themeMap} from '../lib/themes';
 import {injectExtensionBlockTheme, injectExtensionCategoryTheme} from '../lib/themes/blockHelpers';
+import {createBlockSounds, getUiSounds} from '../lib/ui-sounds';
 
 import {connect} from 'react-redux';
 import {updateToolbox} from '../reducers/toolbox';
@@ -75,6 +76,7 @@ class Blocks extends React.Component {
             'onTargetsUpdate',
             'onVisualReport',
             'onWorkspaceUpdate',
+            'onWorkspaceBlockDrop',
             'onWorkspaceMetricsChange',
             'setBlocks',
             'setLocale'
@@ -259,6 +261,7 @@ class Blocks extends React.Component {
 
     attachVM () {
         this.workspace.addChangeListener(this.props.vm.blockListener);
+        this.workspace.addChangeListener(this.onWorkspaceBlockDrop);
         this.flyoutWorkspace = this.workspace
             .getFlyout()
             .getWorkspace();
@@ -278,6 +281,9 @@ class Blocks extends React.Component {
         this.props.vm.addListener('PERIPHERAL_DISCONNECTED', this.handleStatusButtonUpdate);
     }
     detachVM () {
+        if (this.workspace) {
+            this.workspace.removeChangeListener(this.onWorkspaceBlockDrop);
+        }
         this.props.vm.removeListener('SCRIPT_GLOW_ON', this.onScriptGlowOn);
         this.props.vm.removeListener('SCRIPT_GLOW_OFF', this.onScriptGlowOff);
         this.props.vm.removeListener('BLOCK_GLOW_ON', this.onBlockGlowOn);
@@ -327,6 +333,10 @@ class Blocks extends React.Component {
                 });
             }, 0);
         }
+    }
+    onWorkspaceBlockDrop (event) {
+        if (!this.blockSounds) this.blockSounds = createBlockSounds(name => getUiSounds().play(name));
+        this.blockSounds.handle(event, this.ScratchBlocks.Events);
     }
     onScriptGlowOn (data) {
         this.workspace.glowStack(data.id, true);

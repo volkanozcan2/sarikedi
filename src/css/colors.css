@@ -1,52 +1,66 @@
-$ui-primary: hsla(215, 100%, 95%, 1); /* #E5F0FF */
-$ui-secondary: hsla(215, 75%, 95%, 1); /* #E9F1FC */
-$ui-tertiary: hsla(215, 50%, 90%, 1); /* #D9E3F2 */
+/* Neobrutal tema: SARIKEDİ sarısı, petrol yeşili mürekkep ve sıcak vurgular */
+$nb-ink: #184D47;
+$nb-ink-filter: brightness(0) saturate(100%) invert(25%) sepia(23%) saturate(1030%) hue-rotate(123deg) brightness(91%) contrast(91%);
+$nb-shadow: #D9942D;
+$nb-paper: #FFF9E6;
+$nb-paper-dark: #EFE4BD;
+$nb-yellow: #FFD447;
+$nb-pink: #FF9A80; /* uyumluluk adı; yeni ton mercan */
+$nb-cyan: #62D3B4; /* uyumluluk adı; yeni ton nane */
+$nb-green: #9DDB73;
+$nb-blue: #7DD3E8; /* seçili kukla: koyu yeşil çerçeveyle uyumlu turkuaz mavisi */
+$nb-lilac: #FFB85C; /* uyumluluk adı; yeni ton sıcak turuncu */
+$nb-dot: rgba(24, 77, 71, 0.16);
 
-$ui-modal-overlay: hsla(215, 100%, 65%, 0.9); /* 90% transparent version of motion-primary */
+$ui-primary: #FFF9E6; /* krem zemin */
+$ui-secondary: #FFFEF5;
+$ui-tertiary: #EFE4BD;
+
+$ui-modal-overlay: rgba(24, 77, 71, 0.58);
 
 $ui-white: hsla(0, 100%, 100%, 1); /* #FFFFFF */
 $ui-white-dim: hsla(0, 100%, 100%, 0.75); /* 25% transparent version of ui-white */
 $ui-white-transparent: hsla(0, 100%, 100%, 0.25); /* 25% transparent version of ui-white */
 $ui-transparent: hsla(0, 100%, 100%, 0); /* 25% transparent version of ui-white */
 
-$ui-black-transparent: hsla(0, 0%, 0%, 0.15); /* 15% transparent version of black */
-$ui-black-transparent-10: hsla(0, 0%, 0%, 0.10); /* 10% transparent version of black */
+$ui-black-transparent: rgba(24, 77, 71, 0.15);
+$ui-black-transparent-10: rgba(24, 77, 71, 0.10);
 
 $ui-green: hsla(163, 85%, 35%, 1); /* #0DA57A */
 $ui-green-2: hsla(163, 85%, 40%, 1); /* #0FBD8C */
 
-$text-primary: hsla(225, 15%, 40%, 1); /* #575E75 */
-$text-primary-transparent: hsla(225, 15%, 40%, 0.75);
+$text-primary: #184D47;
+$text-primary-transparent: rgba(24, 77, 71, 0.7);
 
-$motion-primary: hsla(215, 100%, 65%, 1); /* #4C97FF */
-$motion-tertiary: hsla(215, 60%, 50%, 1); /* #3373CC */
+$motion-primary: #238264;
+$motion-tertiary: #184D47;
 
-$looks-secondary: hsla(260, 60%, 60%, 1); /* #855CD6 */
-$looks-transparent: hsla(260, 60%, 60%, 0.35); /* 35% transparent version of looks-tertiary */
-$looks-light-transparent: hsla(260, 60%, 60%, 0.15); /* 15% transparent version of looks-tertiary */
-$looks-secondary-dark: 	hsla(260, 42%, 51%, 1); /* #714EB6 */
+$looks-secondary: #C9513A;
+$looks-transparent: rgba(201, 81, 58, 0.35);
+$looks-light-transparent: rgba(201, 81, 58, 0.15);
+$looks-secondary-dark: #A63E2D;
 
-$red-primary: hsla(20, 100%, 55%, 1); /* #FF661A */
-$red-tertiary: hsla(20, 100%, 45%, 1); /* #E64D00 */
+$red-primary: #D94F36;
+$red-tertiary: #B33827;
 
-$sound-primary: hsla(300, 53%, 60%, 1); /* #CF63CF */
-$sound-tertiary: hsla(300, 48%, 50%, 1); /* #BD42BD */
+$sound-primary: #B96C17;
+$sound-tertiary: #925112;
 
-$control-primary: hsla(38, 100%, 55%, 1); /* #FFAB19 */
+$control-primary: #A87800;
 
-$data-primary: hsla(30, 100%, 55%, 1); /* #FF8C1A */
+$data-primary: #C9513A;
 
-$pen-primary: hsla(163, 85%, 40%, 1); /* #0FBD8C */
-$pen-transparent: hsla(163, 85%, 40%, 0.25); /* #0FBD8C */
-$pen-tertiary: hsla(163, 86%, 30%, 1); /* #0B8E69 */
+$pen-primary: #238264;
+$pen-transparent: rgba(35, 130, 100, 0.25);
+$pen-tertiary: #17634F;
 
-$error-primary: hsla(30, 100%, 55%, 1); /* #FF8C1A */
-$error-light: hsla(30, 100%, 70%, 1); /* #FFB366 */
-$error-transparent: hsla(30, 100%, 55%, 0.25); /* #FF8C1A */
+$error-primary: #D94F36;
+$error-light: #F4A28D;
+$error-transparent: rgba(217, 79, 54, 0.25);
 
-$extensions-primary: hsla(163, 85%, 40%, 1); /* #0FBD8C */
-$extensions-tertiary: hsla(163, 85%, 30%, 1); /* #0B8E69 */
-$extensions-transparent: hsla(163, 85%, 40%, 0.35); /* 35% transparent version of extensions-primary */
-$extensions-light: hsla(163, 57%, 85%, 1); /* opaque version of extensions-transparent, on white bg */
+$extensions-primary: #238264;
+$extensions-tertiary: #17634F;
+$extensions-transparent: rgba(35, 130, 100, 0.35);
+$extensions-light: #C5EADD;
 
-$drop-highlight: hsla(215, 100%, 77%, 1); /* lighter than motion-primary */
+$drop-highlight: #8DE3C9;

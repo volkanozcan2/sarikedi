@@ -1,3 +1,8 @@
+@import "../css/fonts.css";
+@import "../css/colors.css";
+@import "../css/typography.css";
+@import "../css/units.css";
+
 html,
 body,
 .app {
@@ -13,3 +18,80 @@ body,
 
 /* @todo: move globally? Safe / side FX, for blocks particularly? */
 * { box-sizing: border-box; }
+
+body {
+    font-family: "Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: $nb-ink;
+    background-color: $nb-paper;
+}
+
+/* scratch-paint ships its own legacy chrome. These stable class-name prefixes
+   keep the editor visually aligned without forking the dependency. */
+[class*="paint-editor_editor-container_"] {
+    background: $nb-paper;
+    font-family: $font-body;
+}
+
+[class*="paint-editor_editor-container-top_"] {
+    border-bottom: 2px dashed $nb-ink;
+}
+
+[class*="paint-editor_mod-dashed-border_"],
+[class*="mode-tools_mod-dashed-border_"] {
+    border-color: $nb-ink !important;
+    border-width: 2px !important;
+}
+
+[class*="paint-editor_canvas-container_"] {
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 5px 5px 0 $nb-shadow;
+    background: $ui-white;
+}
+
+[class*="fixed-tools_costume-input_"] {
+    height: 2rem;
+    border: 2px solid $nb-ink !important;
+    border-radius: 0 !important;
+    background: $ui-white !important;
+    color: $nb-ink;
+    font-family: $font-body;
+    font-weight: 700;
+    box-shadow: 2px 2px 0 $nb-shadow !important;
+}
+
+[class*="paint-editor_button-group-button_"],
+[class*="fixed-tools_button-group-button_"],
+[class*="tool-select-base_mod-tool-select_"],
+[class*="labeled-icon-button_mod-edit-field_"],
+[class*="paint-editor_bitmap-button_"] {
+    border: 2px solid $nb-ink !important;
+    border-radius: 0 !important;
+    background: $ui-white;
+    color: $nb-ink;
+    font-family: $font-body;
+    font-weight: 700;
+}
+
+[class*="tool-select-base_mod-tool-select_"]:hover,
+[class*="paint-editor_button-group-button_"]:hover,
+[class*="fixed-tools_button-group-button_"]:hover {
+    background: $nb-yellow;
+}
+
+[class*="tool-select-base_is-selected_"] {
+    background: $nb-pink !important;
+    box-shadow: 3px 3px 0 $nb-shadow;
+}
+
+[class*="color-button_color-button-swatch_"],
+[class*="color-button_color-button-arrow_"] {
+    border-color: $nb-ink !important;
+    border-width: 2px !important;
+    border-radius: 0 !important;
+}
+
+[class*="paint-editor_zoom-controls_"] [class*="button_button_"] {
+    border: 2px solid $nb-ink;
+    background: $ui-white;
+}

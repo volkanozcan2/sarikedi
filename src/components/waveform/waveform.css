@@ -8,9 +8,9 @@
         This color is lighter than sound-primary, but
         cannot use alpha because of overlapping elements.
     */
-    fill: hsl(300, 54%, 72%);
-    stroke: $sound-tertiary;
+    fill: $nb-pink;
+    stroke: $nb-ink;
 }
 .baseline {
-    stroke: $sound-tertiary;
+    stroke: $nb-ink;
 }

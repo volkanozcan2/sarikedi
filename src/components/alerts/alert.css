@@ -8,7 +8,7 @@
     flex-direction: row;
     overflow: hidden;
     justify-content: flex-start;
-    border-radius: $space;
+    border-radius: 0;
     padding-top: .875rem;
     padding-bottom: .875rem;
     padding-left: 1rem;
@@ -19,15 +19,15 @@
 }
 
 .alert.warn {
-    background: #FFF0DF;
-    border: 1px solid #FF8C1A;
-    box-shadow: 0px 0px 0px 2px rgba(255, 140, 26, 0.25);
+    background: $nb-yellow;
+    border: 3px solid $nb-ink;
+    box-shadow: 4px 4px 0 $nb-shadow;
 }
 
 .alert.success {
-    background: $extensions-light;
-    border: 1px solid $extensions-tertiary;
-    box-shadow: 0px 0px 0px 2px $extensions-light;
+    background: $nb-green;
+    border: 3px solid $nb-ink;
+    box-shadow: 4px 4px 0 $nb-shadow;
 }
 
 .alert-spinner {
@@ -46,7 +46,7 @@
 }
 
 .alert-message {
-    color: #555;
+    color: $nb-ink;
     font-weight: bold;
     font-size: .8125rem;
     line-height: .875rem;
@@ -75,12 +75,13 @@
     min-height: 2rem;
     width: 6.5rem;
     padding: 0.55rem 0.9rem;
-    border-radius: 0.35rem;
-    background: #FF8C1A;
-    color: white;
+    border-radius: 0;
+    background: $nb-pink;
+    color: $nb-ink;
     font-weight: 700;
     font-size: 0.77rem;
-    border: none;
+    border: 2px solid $nb-ink;
+    box-shadow: 2px 2px 0 $nb-shadow;
     cursor: pointer;
     display: flex;
     justify-content: center;

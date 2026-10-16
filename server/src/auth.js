@@ -14,6 +14,14 @@ const hashPassword = password => {
     return `scrypt:${salt.toString('hex')}:${hash.toString('hex')}`;
 };
 
+const hashPasswordAsync = password => new Promise((resolve, reject) => {
+    const salt = crypto.randomBytes(16);
+    crypto.scrypt(password, salt, KEY_LENGTH, (error, hash) => {
+        if (error) reject(error);
+        else resolve(`scrypt:${salt.toString('hex')}:${hash.toString('hex')}`);
+    });
+});
+
 const verifyPassword = (password, stored) => {
     if (typeof password !== 'string' || typeof stored !== 'string') return false;
     if (password.length > MAX_PASSWORD_LENGTH) return false;
@@ -76,6 +84,25 @@ const verifySessionToken = (token, secret, nowMs) => {
     const expected = Buffer.from(sign(secret, expires));
     if (given.length !== expected.length || !crypto.timingSafeEqual(given, expected)) return false;
     return Number(expires) > nowMs;
+};
+
+// Kullanıcı (öğretmen/öğrenci) oturum belirteci: "kimlik.dönem.bitiş.imza". Dönem, şifre sıfırlanınca artar ve
+// eski belirteçleri geçersiz kılar.
+const createUserToken = (secret, userId, epoch, expiresAtMs) => {
+    const body = `${userId}.${epoch}.${expiresAtMs}`;
+    return `${body}.${sign(secret, `user:${body}`)}`;
+};
+
+const verifyUserToken = (token, secret, nowMs) => {
+    if (typeof token !== 'string') return null;
+    const parts = token.split('.');
+    if (parts.length !== 4 || !parts.slice(0, 3).every(part => (/^\d{1,15}$/).test(part))) return null;
+    const body = parts.slice(0, 3).join('.');
+    const given = Buffer.from(parts[3]);
+    const expected = Buffer.from(sign(secret, `user:${body}`));
+    if (given.length !== expected.length || !crypto.timingSafeEqual(given, expected)) return null;
+    if (Number(parts[2]) <= nowMs) return null;
+    return {userId: Number(parts[0]), epoch: Number(parts[1])};
 };
 
 const createRateLimiter = ({
@@ -141,6 +168,9 @@ const createRateLimiter = ({
 
 module.exports = {
     hashPassword,
+    hashPasswordAsync,
+    createUserToken,
+    verifyUserToken,
     verifyPassword,
     verifyPasswordAsync,
     normalizeIp,

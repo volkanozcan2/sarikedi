@@ -7,11 +7,11 @@
 }
 
 .header {
-    background-color: $pen-tertiary;
+    background-color: $nb-yellow;
 }
 
 .body {
-    background: $ui-white;
+    background: $nb-paper;
 }
 
 .label {
@@ -39,7 +39,9 @@
     align-items: center;
 
     background-color: $ui-white;
-    border-radius: 0.25rem;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 3px 3px 0 $nb-shadow;
     padding: 10px;
     width: 100%;
     height: 55px;
@@ -77,13 +79,13 @@
 
 .peripheral-tile button {
     padding: 0.6rem 0.75rem;
-    border: none;
-    border-radius: 0.25rem;
+    border: 2px solid $nb-ink;
+    border-radius: 0;
     font-weight: 600;
     font-size: 0.85rem;
-    background: $looks-secondary;
-    border: $looks-secondary;
-    color: white;
+    background: $nb-pink;
+    color: $nb-ink;
+    box-shadow: 2px 2px 0 $nb-shadow;
     cursor: pointer;
 }
 
@@ -221,7 +223,8 @@
 
 .activityArea {
     height: 165px;
-    background-color: $looks-light-transparent;
+    background-color: $nb-cyan;
+    border: 3px solid $nb-ink;
     display: flex;
     justify-content: center;
     align-items: center;

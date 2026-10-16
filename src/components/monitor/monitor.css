@@ -6,9 +6,9 @@
     position: absolute;
     background: $ui-primary;
     z-index: $z-index-monitor;
-    border: 1px solid $ui-black-transparent;
-    border-radius: calc($space / 2);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    font-family: $font-body;
     font-size: 0.75rem;
     transition: box-shadow 0.2s;
     pointer-events: all;
@@ -21,7 +21,7 @@
 
 .dragging {
     z-index: $z-index-monitor-dragging;
-    box-shadow: 3px 3px 5px #888888;
+    box-shadow: 5px 5px 0 $nb-shadow;
 }
 
 .default-monitor {
@@ -76,7 +76,7 @@
 
 .list-header {
     background: $ui-white;
-    border-bottom: 1px solid $ui-black-transparent;
+    border-bottom: 2px solid $nb-ink;
     text-align: center;
     padding: 3px;
     font-size: 0.75rem;
@@ -114,8 +114,8 @@
     min-width: 40px;
     text-align: left;
     margin: 0 3px;
-    border-radius: calc($space / 2);
-    border: 1px solid $ui-black-transparent;
+    border-radius: 0;
+    border: 2px solid $nb-ink;
     flex-grow: 1;
     height: 22px;
 }
@@ -160,7 +160,7 @@
     background: none;
     outline: none;
     font-size: 0.75rem;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $font-body;
     /* Workaround for Firefox */
     width: 0;
     flex: 1 1 auto;

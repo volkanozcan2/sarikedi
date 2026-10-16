@@ -19,12 +19,12 @@
 .modal-content {
     margin: 100px auto;
     outline: none;
-    border: 4px solid $ui-white-transparent;
+    border: $nb-border-width solid $nb-ink;
     padding: 0;
-    border-radius: $space;
+    border-radius: 0;
     user-select: none;
-
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    box-shadow: 8px 8px 0 $nb-shadow;
+    font-family: $font-body;
     color: $text-primary;
     overflow: hidden;
 }
@@ -46,6 +46,7 @@
     margin: 0;
     border: none;
     border-radius: 0;
+    box-shadow: none;
 }
 
 
@@ -67,19 +68,19 @@ $sides: 20rem;
 
     box-sizing: border-box;
     width: 100%;
-    background-color: $looks-secondary;
-
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: $nb-yellow;
+    border-bottom: $nb-border-width solid $nb-ink;
+    font-family: $font-body;
     font-size: 1rem;
-    font-weight: normal;
+    font-weight: 700;
 }
 
 .header-item {
     display: flex;
     align-items: center;
-    padding: 1rem;
+    padding: 0 1rem;
     text-decoration: none;
-    color: $ui-white;
+    color: $nb-ink;
     user-select: none;
 }
 
@@ -104,6 +105,8 @@ $sides: 20rem;
     user-select: none;
     letter-spacing: 0.4px;
     cursor: default;
+    font-family: $font-heading;
+    text-transform: uppercase;
 }
 
 [dir="ltr"] .header-item-title {
@@ -134,9 +137,15 @@ $sides: 20rem;
 }
 
 .back-button {
-    font-weight: normal;
-    padding-right: 0;
-    padding-left: 0;
+    padding: 0.35rem 0.65rem;
+    background: $ui-white;
+    color: $nb-ink;
+}
+
+.back-button img,
+.header-image,
+.help-button img {
+    filter: $nb-ink-filter;
 }
 
 [dir="rtl"] .back-button img {
@@ -157,7 +166,9 @@ $sides: 20rem;
 }
 
 .help-button {
-    font-weight: normal;
+    background: $ui-white;
+    color: $nb-ink;
+    font-weight: 700;
     font-size: 0.75rem;
 }
 

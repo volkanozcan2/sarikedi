@@ -16,20 +16,21 @@
 .modal-content {
     margin: 100px auto;
     outline: none;
-    border: .25rem solid $ui-white-transparent;
+    border: 3px solid $nb-ink;
     padding: 0;
-    border-radius: $space;
+    border-radius: 0;
     user-select: none;
     width: 500px;
 
     color: $text-primary;
     overflow: hidden;
+    box-shadow: 8px 8px 0 $nb-shadow;
 }
 
 .illustration {
     width: 100%;
     height: 208px;
-    background-color: $looks-secondary;
+    background-color: $nb-lilac;
     background-image: url('./unsupported.png');
     background-size: cover;
 }
@@ -39,7 +40,7 @@
 }
 
 .body {
-    background: $ui-white;
+    background: $nb-paper;
     padding: 1.5rem 2.25rem;
     text-align: center;
 }
@@ -54,11 +55,12 @@
 }
 
 .button-row button {
-    border: 1px solid $looks-secondary;
-    border-radius: 0.25rem;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
     padding: 0.5rem 2rem;
-    background: $looks-secondary;
-    color: white;
+    background: $nb-yellow;
+    color: $nb-ink;
+    box-shadow: 3px 3px 0 $nb-shadow;
     font-weight: bold;
     font-size: 0.875rem;
 }

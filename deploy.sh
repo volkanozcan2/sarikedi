@@ -40,7 +40,6 @@ for i in $(seq 1 20); do
   sleep 2
 done
 curl -fsS "$SITE/api/health"; echo
-curl -fsS "$SITE/api/lessons" | head -c 120; echo
 W=$(grep -oh 'chunks/fetch-worker\.[a-f0-9]*\.js' build/gui.js | sort -u | head -1)
 echo "fetch-worker: $(curl -s -o /dev/null -w '%{http_code}' "$SITE/$W")"
 echo "Bitti: $SITE"

@@ -3,10 +3,28 @@
 
 .tag-button {
     padding: .625rem 1rem;
-    background: $looks-secondary;
-    border-radius: 1.375rem;
-    color: $ui-white;
+    background: $ui-white;
+    border: 3px solid $nb-ink;
+    border-radius: 0;
+    box-shadow: 3px 3px 0 $nb-shadow;
+    color: $nb-ink;
     height: $library-filter-bar-height;
+    font-family: $font-body;
+    font-weight: 700;
+    cursor: pointer;
+    transition: translate 0.08s linear, box-shadow 0.08s linear, background-color 0.08s linear;
+}
+
+.tag-button:hover {
+    background: $nb-pink;
+    translate: -1px -1px;
+    box-shadow: 4px 4px 0 $nb-shadow;
+}
+
+.tag-button:active {
+    background: $nb-cyan;
+    translate: 3px 3px;
+    box-shadow: none;
 }
 
 .tag-button-icon {
@@ -15,5 +33,5 @@
 }
 
 .active {
-    background: $data-primary;
+    background: $nb-yellow;
 }
